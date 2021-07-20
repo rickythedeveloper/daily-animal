@@ -28,3 +28,5 @@ ipcRenderer.on(MessageType[MessageType.returnBreedData], (event, data: BreedData
 function getAnotherBreed() {
 	ipcRenderer.send(MessageType[MessageType.requestBreedData]);
 }
+
+getAnotherBreed();
