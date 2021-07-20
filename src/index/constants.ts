@@ -1,7 +1,6 @@
 enum MessageType {
-  someAsyncMessage = 'someAsyncMessage',
-  someAsyncReply = 'someAsyncReply',
-  someSyncMessage = 'someSyncMessage',
+	requestBreedData,
+	returnBreedData,
 }
 
 type MessageTypeString = keyof typeof MessageType;

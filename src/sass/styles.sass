@@ -4,3 +4,15 @@ $primary-color: #ff0000
 body
     font: 100% $font-stack
     color: $primary-color
+
+    .container
+        display: grid
+        grid-template-columns: minmax(100px, 20%) 1fr
+
+        .sidebar
+            background-color: red
+            
+        .content
+            .breedImage
+                object-fit: contain
+                width: 500px

@@ -1,9 +1,30 @@
 // In renderer process (web page).
 import { ipcRenderer } from 'electron';
 import { MessageType } from './constants';
+import { BreedData } from './accessDogAPI';
 
-const syncReply = ipcRenderer.sendSync(MessageType.someSyncMessage, 'synchronous message from renderer');
-console.log(syncReply); // eslint-disable-line no-console
+ipcRenderer.on(MessageType[MessageType.returnBreedData], (event, data: BreedData) => {
+	const breedContainer = document.getElementById('breedContainer');
+	if (breedContainer === null) return;
+	breedContainer.innerHTML = '';
 
-ipcRenderer.on(MessageType.someAsyncReply, (event, arg) => console.log(arg)); // eslint-disable-line no-console
-ipcRenderer.send(MessageType.someAsyncMessage, 'Async message from renderer');
+	const breedNameElem = document.createElement('div');
+	breedNameElem.id = 'breedName';
+	const breedName = data.name ? data.name : '';
+	breedNameElem.innerHTML = breedName;
+
+	const imgElem = document.createElement('img');
+	imgElem.classList.add('breedImage');
+	const imageData = data.image;
+	if (imgElem !== null && imageData !== undefined) {
+		imgElem.src = imageData.url;
+	}
+
+	breedContainer.appendChild(breedNameElem);
+	breedContainer.appendChild(imgElem);
+});
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function getAnotherBreed() {
+	ipcRenderer.send(MessageType[MessageType.requestBreedData]);
+}
