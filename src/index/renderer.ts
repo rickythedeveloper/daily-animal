@@ -9,7 +9,7 @@ function showBreedData(data: BreedData) {
 	breedContainer.innerHTML = '';
 
 	const breedNameElem = document.createElement('div');
-	breedNameElem.id = 'breedName';
+	breedNameElem.classList.add('breedName', 'clickable');
 	const breedName = data.name ? data.name : '';
 	breedNameElem.innerHTML = breedName;
 
@@ -20,7 +20,13 @@ function showBreedData(data: BreedData) {
 		imgElem.src = imageData.url;
 	}
 
+	const temparamentElem = document.createElement('div');
+	temparamentElem.classList.add('breedTemperament');
+	const desc = data.temperament;
+	if (desc !== undefined) temparamentElem.innerHTML = desc;
+
 	breedContainer.appendChild(breedNameElem);
+	breedContainer.appendChild(temparamentElem);
 	breedContainer.appendChild(imgElem);
 }
 
