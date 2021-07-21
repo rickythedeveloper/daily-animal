@@ -3,7 +3,7 @@ import { ipcRenderer } from 'electron';
 import { MessageType } from './constants';
 import { BreedData } from './accessDogAPI';
 
-ipcRenderer.on(MessageType[MessageType.returnBreedData], (event, data: BreedData) => {
+function showBreedData(data: BreedData) {
 	const breedContainer = document.getElementById('breedContainer');
 	if (breedContainer === null) return;
 	breedContainer.innerHTML = '';
@@ -22,6 +22,10 @@ ipcRenderer.on(MessageType[MessageType.returnBreedData], (event, data: BreedData
 
 	breedContainer.appendChild(breedNameElem);
 	breedContainer.appendChild(imgElem);
+}
+
+ipcRenderer.on(MessageType[MessageType.returnBreedData], (event, data: BreedData) => {
+	showBreedData(data);
 });
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
