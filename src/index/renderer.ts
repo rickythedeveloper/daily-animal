@@ -3,7 +3,22 @@ import { ipcRenderer } from 'electron';
 import { MessageType } from './constants';
 import { BreedData } from './accessDogAPI';
 
-function showBreedData(data: BreedData) {
+function addPhotos(imagesContainer: HTMLElement, urls: string[]) {
+	if (imagesContainer === null) return;
+
+	urls.forEach((url) => {
+		const imgElem = document.createElement('img');
+		imgElem.classList.add('breedImage');
+		imgElem.src = url;
+
+		const imgContainer = document.createElement('div');
+		imgContainer.classList.add('imageContainer');
+		imgContainer.appendChild(imgElem);
+		imagesContainer.appendChild(imgContainer);
+	});
+}
+
+function showBreedData(data: BreedData, photoURLs: string[]) {
 	const breedContainer = document.getElementById('breedContainer');
 	if (breedContainer === null) return;
 	breedContainer.innerHTML = '';
@@ -13,12 +28,9 @@ function showBreedData(data: BreedData) {
 	const breedName = data.name ? data.name : '';
 	breedNameElem.innerHTML = breedName;
 
-	const imgElem = document.createElement('img');
-	imgElem.classList.add('breedImage');
-	const imageData = data.image;
-	if (imgElem !== null && imageData !== undefined) {
-		imgElem.src = imageData.url;
-	}
+	const imagesContainer = document.createElement('div');
+	imagesContainer.classList.add('imagesContainer');
+	addPhotos(imagesContainer, photoURLs);
 
 	const temparamentElem = document.createElement('div');
 	temparamentElem.classList.add('breedTemperament');
@@ -27,16 +39,46 @@ function showBreedData(data: BreedData) {
 
 	breedContainer.appendChild(breedNameElem);
 	breedContainer.appendChild(temparamentElem);
-	breedContainer.appendChild(imgElem);
+	breedContainer.appendChild(imagesContainer);
 }
 
-ipcRenderer.on(MessageType[MessageType.returnBreedData], (event, data: BreedData) => {
-	showBreedData(data);
-});
+function sideBarText(str: string): HTMLDivElement {
+	const elem = document.createElement('div');
+	elem.classList.add('sideBarText');
+	elem.innerHTML = str;
+	elem.onclick = () => console.log('hey');
+	return elem;
+}
+
+function configureSidebar() {
+	const sideBar = document.getElementById('sideBar');
+	if (sideBar === null) return;
+	sideBar.appendChild(sideBarText('Random dog'));
+}
+
+async function getRandomBreedData(): Promise<BreedData> {
+	const data = await ipcRenderer.invoke(MessageType[MessageType.requestBreedData]);
+	return data;
+}
+
+async function getPhotoURLs(breedId: string): Promise<string[]> {
+	const urls = await ipcRenderer.invoke(MessageType[MessageType.requestBreedPhotos], breedId);
+	return urls;
+}
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function getAnotherBreed() {
-	ipcRenderer.send(MessageType[MessageType.requestBreedData]);
+async function getAnotherBreed() {
+	const breedData = await getRandomBreedData();
+	const breedId = breedData.id;
+	let photoURLs: string[] = [];
+	if (breedId === undefined) {
+		const { image } = breedData;
+		if (image !== undefined) photoURLs = [image.url];
+	} else {
+		photoURLs = await getPhotoURLs(breedId);
+	}
+	showBreedData(breedData, photoURLs);
 }
 
+configureSidebar();
 getAnotherBreed();

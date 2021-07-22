@@ -2,13 +2,14 @@ import { app, BrowserWindow, ipcMain } from 'electron';
 import path from 'path';
 
 import { MessageType } from './constants';
-import { getRandomDogData } from './accessDogAPI';
+import { getRandomDogData, getBreedPhotoURLs } from './accessDogAPI';
 
 function createWindow() {
 	// Create the browser window.
 	const mainWindow = new BrowserWindow({
-		width: 800,
-		height: 600,
+		width: 1200,
+		height: 900,
+		backgroundColor: 'white',
 		webPreferences: {
 			nodeIntegration: true,
 			contextIsolation: false,
@@ -42,7 +43,12 @@ app.on('window-all-closed', () => {
 	if (process.platform !== 'darwin') app.quit();
 });
 
-ipcMain.on(MessageType[MessageType.requestBreedData], async (event) => {
+ipcMain.handle(MessageType[MessageType.requestBreedData], async () => {
 	const breed = await getRandomDogData();
-	event.reply(MessageType[MessageType.returnBreedData], breed);
+	return breed;
+});
+
+ipcMain.handle(MessageType[MessageType.requestBreedPhotos], async (event, breedId) => {
+	const photoURLs = await getBreedPhotoURLs(breedId);
+	return photoURLs;
 });

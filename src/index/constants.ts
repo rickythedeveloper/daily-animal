@@ -1,6 +1,6 @@
 enum MessageType {
 	requestBreedData,
-	returnBreedData,
+	requestBreedPhotos,
 }
 
 type MessageTypeString = keyof typeof MessageType;
