@@ -27,6 +27,7 @@
 					"requireLast": false
 				}
 			}
-		]
+		],
+		"no-continue": ["off"]
 	}
 }

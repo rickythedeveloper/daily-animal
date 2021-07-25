@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { getRandomElement } from '../utils';
 
 interface Length {
 	imperial: string;
@@ -13,7 +12,7 @@ interface Image {
 	width: number;
 }
 
-export interface BreedData {
+interface BreedData {
 	alt_names?: string;
 	bred_for?: string;
 	breed_group?: string;
@@ -36,30 +35,19 @@ const config = {
 		'x-api-key': apiKey,
 	},
 };
-let breedsData: BreedData[];
 
 async function getBreeds(): Promise<BreedData[]> {
 	const url = 'https://api.thedogapi.com/v1/breeds';
-	const { data } = await axios.get(url, config);
+	const { data }: { data: BreedData[] } = await axios.get(url, config);
 	return data;
-}
-
-export async function getRandomDogData(): Promise<BreedData> {
-	if (breedsData === undefined) breedsData = await getBreeds();
-	const randomBreed = getRandomElement(breedsData);
-	return randomBreed;
 }
 
 async function getBreedPhotos(breedId: string): Promise<Image[]> {
 	const maxPhotos = 20;
 	// const breedIdDummy = 1;
 	const url = `https://api.thedogapi.com/v1/images/search?breed_id=${breedId}&limit=${maxPhotos}`;
-	const { data } = await axios.get(url, config);
+	const { data }: { data: Image[] } = await axios.get(url, config);
 	return data;
 }
 
-export async function getBreedPhotoURLs(breedId: string): Promise<string[]> {
-	const data = await getBreedPhotos(breedId);
-	const urls = data.map((image) => image.url);
-	return urls;
-}
+export { BreedData, getBreeds, getBreedPhotos };
