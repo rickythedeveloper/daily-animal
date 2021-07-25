@@ -44,6 +44,7 @@ app.on('window-all-closed', () => {
 	if (process.platform !== 'darwin') app.quit();
 });
 
+// Store the array of BreedData in _breedData but access via breedsData().then(...) due to the nature of promise.
 let _breedsData: BreedData[]; // eslint-disable-line no-underscore-dangle, @typescript-eslint/naming-convention
 const breedsData = async (): Promise<BreedData[]> => {
 	if (_breedsData === undefined) {
@@ -52,9 +53,12 @@ const breedsData = async (): Promise<BreedData[]> => {
 	return _breedsData;
 };
 
-let currentIndex = 0;
+let currentBreedIndex = 0; // index of breed to use in breedsData
 const breedPhotoUrls: { [breedId: string]: string[] } = {};
 
+/**
+ * Load the phoro urls into breedPhotoUrls dictionary
+ */
 async function loadBreedPhotoUrls(breedId: string) {
 	if (breedId in breedPhotoUrls) return;
 	const images = await getBreedPhotos(breedId);
@@ -62,14 +66,21 @@ async function loadBreedPhotoUrls(breedId: string) {
 	breedPhotoUrls[breedId] = urls;
 }
 
+/**
+ * Get the phoro urls from breedPhotoUrls dictionary. Load the urls using the API if necessary.
+ */
 async function getBreedPhotoUrls(breedId: string): Promise<string[]> {
 	if (breedId in breedPhotoUrls) return breedPhotoUrls[breedId];
 	await loadBreedPhotoUrls(breedId);
 	return breedPhotoUrls[breedId];
 }
 
+/**
+ * Load the next photo urls via the API.
+ * @param num The number of breeds to load the photo urls for.
+ */
 async function loadNextUrls(num: number) {
-	for (let index = currentIndex + 1; index <= currentIndex + 1 + num; index += 1) {
+	for (let index = currentBreedIndex + 1; index <= currentBreedIndex + num; index += 1) {
 		breedsData().then((data) => {
 			const { id } = data[index];
 			if (id !== undefined) loadBreedPhotoUrls(id);
@@ -78,9 +89,9 @@ async function loadNextUrls(num: number) {
 }
 
 ipcMain.handle(MessageType[MessageType.requestNextBreedData], async (): Promise<null | BreedDataRenderer> => {
-	currentIndex += 1;
+	currentBreedIndex += 1;
 	return breedsData().then(async (data): Promise<null | BreedDataRenderer> => {
-		const breed = data[currentIndex];
+		const breed = data[currentBreedIndex];
 		const { id } = breed;
 		if (id === undefined) return null;
 		return getBreedPhotoUrls(id).then((urls): BreedDataRenderer => {

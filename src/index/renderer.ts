@@ -56,14 +56,11 @@ function configureSidebar() {
 	sideBar.appendChild(sideBarText('Random dog'));
 }
 
-configureSidebar();
-
-export interface BreedDataRenderer {
+interface BreedDataRenderer {
 	breedData: BreedData;
 	photoUrls: string[];
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function getNextBreedData() {
 	// eslint-disable-next-line max-len
 	const nextBreedData: BreedDataRenderer | null = await ipcRenderer.invoke(MessageType[MessageType.requestNextBreedData]);
@@ -71,4 +68,7 @@ async function getNextBreedData() {
 	showBreedData(nextBreedData.breedData, nextBreedData.photoUrls);
 }
 
+configureSidebar();
 getNextBreedData();
+
+export { BreedDataRenderer }; // eslint-disable-line import/prefer-default-export

@@ -12,7 +12,7 @@ interface Image {
 	width: number;
 }
 
-export interface BreedData {
+interface BreedData {
 	alt_names?: string;
 	bred_for?: string;
 	breed_group?: string;
@@ -36,18 +36,18 @@ const config = {
 	},
 };
 
-export async function getBreeds(): Promise<BreedData[]> {
+async function getBreeds(): Promise<BreedData[]> {
 	const url = 'https://api.thedogapi.com/v1/breeds';
 	const { data }: { data: BreedData[] } = await axios.get(url, config);
-	// console.log('got the breed data');
 	return data;
 }
 
-export async function getBreedPhotos(breedId: string): Promise<Image[]> {
+async function getBreedPhotos(breedId: string): Promise<Image[]> {
 	const maxPhotos = 20;
 	// const breedIdDummy = 1;
 	const url = `https://api.thedogapi.com/v1/images/search?breed_id=${breedId}&limit=${maxPhotos}`;
 	const { data }: { data: Image[] } = await axios.get(url, config);
-	// console.log('got breed photos data');
 	return data;
 }
+
+export { BreedData, getBreeds, getBreedPhotos };
