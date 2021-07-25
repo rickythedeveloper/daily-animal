@@ -56,29 +56,19 @@ function configureSidebar() {
 	sideBar.appendChild(sideBarText('Random dog'));
 }
 
-async function getRandomBreedData(): Promise<BreedData> {
-	const data = await ipcRenderer.invoke(MessageType[MessageType.requestBreedData]);
-	return data;
-}
+configureSidebar();
 
-async function getPhotoURLs(breedId: string): Promise<string[]> {
-	const urls = await ipcRenderer.invoke(MessageType[MessageType.requestBreedPhotos], breedId);
-	return urls;
+export interface BreedDataRenderer {
+	breedData: BreedData;
+	photoUrls: string[];
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-async function getAnotherBreed() {
-	const breedData = await getRandomBreedData();
-	const breedId = breedData.id;
-	let photoURLs: string[] = [];
-	if (breedId === undefined) {
-		const { image } = breedData;
-		if (image !== undefined) photoURLs = [image.url];
-	} else {
-		photoURLs = await getPhotoURLs(breedId);
-	}
-	showBreedData(breedData, photoURLs);
+async function getNextBreedData() {
+	// eslint-disable-next-line max-len
+	const nextBreedData: BreedDataRenderer | null = await ipcRenderer.invoke(MessageType[MessageType.requestNextBreedData]);
+	if (nextBreedData === null) return;
+	showBreedData(nextBreedData.breedData, nextBreedData.photoUrls);
 }
 
-configureSidebar();
-getAnotherBreed();
+getNextBreedData();
