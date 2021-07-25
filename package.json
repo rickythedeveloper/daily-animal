@@ -1,5 +1,5 @@
 {
-	"name": "electron-ts-test",
+	"name": "daily-animal",
 	"version": "1.0.0",
 	"description": "",
 	"main": "build/index/main.js",
@@ -19,9 +19,9 @@
 	"author": "",
 	"license": "ISC",
 	"bugs": {
-		"url": "https://github.com/rickythedeveloper/electron-ts-test/issues"
+		"url": "https://github.com/rickythedeveloper/daily-animal/issues"
 	},
-	"homepage": "https://github.com/rickythedeveloper/electron-ts-test#readme",
+	"homepage": "https://github.com/rickythedeveloper/daily-animal#readme",
 	"devDependencies": {
 		"@typescript-eslint/eslint-plugin": "^4.28.4",
 		"@typescript-eslint/parser": "^4.28.4",
