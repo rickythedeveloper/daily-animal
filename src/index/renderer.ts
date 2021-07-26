@@ -16,34 +16,12 @@ async function getNextBreedData() {
 	showBreedData(nextBreedData.breedData, nextBreedData.photoUrls);
 }
 
-function addPhotos(imagesContainer: HTMLElement, urls: string[]) {
-	if (imagesContainer === null) return;
-
-	urls.forEach((url) => {
-		const imgElem = document.createElement('img');
-		imgElem.classList.add('breedImage');
-		imgElem.src = url;
-
-		const imgContainer = document.createElement('div');
-		imgContainer.classList.add('imageContainer');
-		imgContainer.appendChild(imgElem);
-		imagesContainer.appendChild(imgContainer);
-	});
-}
-
 const breedContainer = (() => {
 	const elem = document.createElement('div');
 	elem.id = 'breedContainer';
 	elem.innerHTML = '';
 	return elem;
 })();
-
-const imagesContainer = (photoUrls: string[]) => {
-	const elem = document.createElement('div');
-	elem.classList.add('imagesContainer');
-	addPhotos(elem, photoUrls);
-	return elem;
-};
 
 const breedNameElem = (name: string) => {
 	const elem = document.createElement('div');
@@ -57,6 +35,29 @@ const breedTemperamentElem = (temperament: string) => {
 	const elem = document.createElement('div');
 	elem.classList.add('breedTemperament');
 	elem.innerHTML = temperament;
+	return elem;
+};
+
+const imageContainer = (url: string) => {
+	const imgElem = document.createElement('img');
+	imgElem.classList.add('breedImage');
+	imgElem.src = url;
+
+	const imgContainer = document.createElement('div');
+	imgContainer.classList.add('imageContainer');
+	imgContainer.appendChild(imgElem);
+
+	return imgContainer;
+};
+
+const imagesContainer = (photoUrls: string[]) => {
+	const elem = document.createElement('div');
+	elem.classList.add('imagesContainer');
+	// addPhotos(elem, photoUrls);
+
+	photoUrls.forEach((url) => {
+		elem.appendChild(imageContainer(url));
+	});
 	return elem;
 };
 
