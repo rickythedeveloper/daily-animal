@@ -47,9 +47,7 @@ app.on('window-all-closed', () => {
 // Store the array of BreedData in _breedData but access via breedsData().then(...) due to the nature of promise.
 let _breedsData: BreedData[]; // eslint-disable-line no-underscore-dangle, @typescript-eslint/naming-convention
 const breedsData = async (): Promise<BreedData[]> => {
-	if (_breedsData === undefined) {
-		_breedsData = await getBreeds();
-	}
+	if (_breedsData === undefined) _breedsData = await getBreeds();
 	return _breedsData;
 };
 
