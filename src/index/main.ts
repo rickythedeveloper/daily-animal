@@ -1,9 +1,18 @@
 import { app, BrowserWindow, ipcMain } from 'electron';
+import electronReload from 'electron-reload';
 import path from 'path';
-
 import { MessageType } from './constants';
 import { BreedData, getBreeds, getBreedPhotos } from './accessDogAPI';
 import { BreedDataRenderer } from './renderer';
+
+const hardRefresh = false;
+if (hardRefresh) {
+	electronReload('../', {
+		electron: path.join(__dirname, '../..', 'node_modules', '.bin', 'electron'),
+	});
+} else {
+	electronReload('../', {});
+}
 
 function createWindow() {
 	// Create the browser window.

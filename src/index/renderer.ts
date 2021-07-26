@@ -16,6 +16,15 @@ async function getNextBreedData() {
 	showBreedData(nextBreedData.breedData, nextBreedData.photoUrls);
 }
 
+const contentElem = (() => {
+	const elem = document.getElementById('content');
+	if (elem === null) {
+		console.log('Could not find content element...');
+		return null;
+	}
+	return elem;
+})();
+
 const breedContainer = (() => {
 	const elem = document.createElement('div');
 	elem.id = 'breedContainer';
@@ -70,12 +79,7 @@ const nextBreedButton = (() => {
 })();
 
 function showBreedData(data: BreedData, photoURLs: string[]) {
-	const contentElem = document.getElementById('content');
-	if (contentElem === null) {
-		console.log('Could not find content element...');
-		return;
-	}
-
+	if (contentElem === null) return;
 	contentElem.innerHTML = '';
 	contentElem.appendChild(breedContainer);
 	contentElem.appendChild(nextBreedButton);
@@ -84,6 +88,11 @@ function showBreedData(data: BreedData, photoURLs: string[]) {
 	breedContainer.appendChild(breedNameElem(data.name || ''));
 	breedContainer.appendChild(breedTemperamentElem(data.temperament || ''));
 	breedContainer.appendChild(imagesContainer(photoURLs));
+}
+
+function addNextBreedButton() {
+	if (contentElem === null) return;
+	contentElem.appendChild(nextBreedButton);
 }
 
 function sideBarText(str: string): HTMLDivElement {
@@ -101,6 +110,6 @@ function configureSidebar() {
 }
 
 configureSidebar();
-getNextBreedData();
+addNextBreedButton();
 
 export { BreedDataRenderer }; // eslint-disable-line import/prefer-default-export
