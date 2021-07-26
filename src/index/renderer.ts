@@ -3,6 +3,19 @@ import { ipcRenderer } from 'electron';
 import { MessageType } from './constants';
 import { BreedData } from './accessDogAPI';
 
+interface BreedDataRenderer {
+	breedData: BreedData;
+	photoUrls: string[];
+}
+
+async function getNextBreedData() {
+	// eslint-disable-next-line max-len
+	const nextBreedData: BreedDataRenderer | null = await ipcRenderer.invoke(MessageType[MessageType.requestNextBreedData]);
+	if (nextBreedData === null) return;
+	// eslint-disable-next-line @typescript-eslint/no-use-before-define
+	showBreedData(nextBreedData.breedData, nextBreedData.photoUrls);
+}
+
 function addPhotos(imagesContainer: HTMLElement, urls: string[]) {
 	if (imagesContainer === null) return;
 
@@ -18,28 +31,58 @@ function addPhotos(imagesContainer: HTMLElement, urls: string[]) {
 	});
 }
 
+const breedContainer = (() => {
+	const elem = document.createElement('div');
+	elem.id = 'breedContainer';
+	elem.innerHTML = '';
+	return elem;
+})();
+
+const imagesContainer = (photoUrls: string[]) => {
+	const elem = document.createElement('div');
+	elem.classList.add('imagesContainer');
+	addPhotos(elem, photoUrls);
+	return elem;
+};
+
+const breedNameElem = (name: string) => {
+	const elem = document.createElement('div');
+	elem.classList.add('breedName', 'clickable');
+	const breedName = name;
+	elem.innerHTML = breedName;
+	return elem;
+};
+
+const breedTemperamentElem = (temperament: string) => {
+	const elem = document.createElement('div');
+	elem.classList.add('breedTemperament');
+	elem.innerHTML = temperament;
+	return elem;
+};
+
+const nextBreedButton = (() => {
+	const button = document.createElement('button');
+	button.onclick = getNextBreedData;
+	button.classList.add('ourButton');
+	button.innerText = 'Get next breed';
+	return button;
+})();
+
 function showBreedData(data: BreedData, photoURLs: string[]) {
-	const breedContainer = document.getElementById('breedContainer');
-	if (breedContainer === null) return;
+	const contentElem = document.getElementById('content');
+	if (contentElem === null) {
+		console.log('Could not find content element...');
+		return;
+	}
+
+	contentElem.innerHTML = '';
+	contentElem.appendChild(breedContainer);
+	contentElem.appendChild(nextBreedButton);
+
 	breedContainer.innerHTML = '';
-
-	const breedNameElem = document.createElement('div');
-	breedNameElem.classList.add('breedName', 'clickable');
-	const breedName = data.name ? data.name : '';
-	breedNameElem.innerHTML = breedName;
-
-	const imagesContainer = document.createElement('div');
-	imagesContainer.classList.add('imagesContainer');
-	addPhotos(imagesContainer, photoURLs);
-
-	const temparamentElem = document.createElement('div');
-	temparamentElem.classList.add('breedTemperament');
-	const desc = data.temperament;
-	if (desc !== undefined) temparamentElem.innerHTML = desc;
-
-	breedContainer.appendChild(breedNameElem);
-	breedContainer.appendChild(temparamentElem);
-	breedContainer.appendChild(imagesContainer);
+	breedContainer.appendChild(breedNameElem(data.name || ''));
+	breedContainer.appendChild(breedTemperamentElem(data.temperament || ''));
+	breedContainer.appendChild(imagesContainer(photoURLs));
 }
 
 function sideBarText(str: string): HTMLDivElement {
@@ -54,18 +97,6 @@ function configureSidebar() {
 	const sideBar = document.getElementById('sideBar');
 	if (sideBar === null) return;
 	sideBar.appendChild(sideBarText('Random dog'));
-}
-
-interface BreedDataRenderer {
-	breedData: BreedData;
-	photoUrls: string[];
-}
-
-async function getNextBreedData() {
-	// eslint-disable-next-line max-len
-	const nextBreedData: BreedDataRenderer | null = await ipcRenderer.invoke(MessageType[MessageType.requestNextBreedData]);
-	if (nextBreedData === null) return;
-	showBreedData(nextBreedData.breedData, nextBreedData.photoUrls);
 }
 
 configureSidebar();
