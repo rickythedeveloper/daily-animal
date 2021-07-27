@@ -3,7 +3,7 @@ import electronReload from 'electron-reload';
 import path from 'path';
 import { MessageType } from './constants';
 import { BreedData, getBreeds, getBreedPhotos } from './accessDogAPI';
-import { BreedDataRenderer } from './renderer';
+import { BreedDataRenderer } from '../components/BreedContainerElem';
 
 const hardRefresh = false;
 if (hardRefresh) {
