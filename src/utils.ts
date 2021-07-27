@@ -5,7 +5,3 @@ export function getRandomInt(max: number) {
 export function getRandomElement<T>(array: Array<T>): T {
 	return array[getRandomInt(array.length - 1)];
 }
-
-function randomiseNumber(min: number, max: number): number[] {
-	return [];
-}

@@ -1,44 +1,27 @@
 // In renderer process (web page).
 import { ipcRenderer } from 'electron';
 import { MessageType } from './constants';
-import { BreedData } from './accessDogAPI';
 import BreedContainerElem, { BreedDataRenderer } from '../components/BreedContainerElem';
+import GenericButton from '../components/GenericButton';
 
-async function getNextBreedData() {
-	// eslint-disable-next-line max-len
-	const nextBreedData: BreedDataRenderer | null = await ipcRenderer.invoke(MessageType[MessageType.requestNextBreedData]);
-	if (nextBreedData === null) return;
-	// eslint-disable-next-line @typescript-eslint/no-use-before-define
-	showBreedData(nextBreedData);
-}
+const contentElem = document.getElementById('content') as HTMLDivElement | null;
+// eslint-disable-next-line @typescript-eslint/no-use-before-define
+const nextBreedButton = GenericButton('Get next breed', onNextBreedPress);
 
-const contentElem = (() => {
-	const elem = document.getElementById('content');
-	if (elem === null) {
-		console.log('Could not find content element...');
-		return null;
-	}
-	return elem;
-})();
-
-const nextBreedButton = (() => {
-	const button = document.createElement('button');
-	button.onclick = getNextBreedData;
-	button.classList.add('ourButton');
-	button.innerText = 'Get next breed';
-	return button;
-})();
-
-function showBreedData(data: BreedDataRenderer) {
+function showBreedData(data: BreedDataRenderer | null) {
 	if (contentElem === null) return;
 	contentElem.innerHTML = '';
 	contentElem.appendChild(nextBreedButton);
-	contentElem.appendChild(BreedContainerElem(data));
+	if (data !== null) contentElem.appendChild(BreedContainerElem(data));
 }
 
-function addNextBreedButton() {
-	if (contentElem === null) return;
-	contentElem.appendChild(nextBreedButton);
+async function getNextBreedData(): Promise<BreedDataRenderer | null> {
+	return await ipcRenderer.invoke(MessageType[MessageType.requestNextBreedData]) as BreedDataRenderer | null;
+}
+
+async function onNextBreedPress() {
+	const data = await getNextBreedData();
+	showBreedData(data);
 }
 
 function sideBarText(str: string, onClick: (ev: MouseEvent) => void): HTMLDivElement {
@@ -57,4 +40,4 @@ function configureSidebar() {
 }
 
 configureSidebar();
-addNextBreedButton();
+showBreedData(null);

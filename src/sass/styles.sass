@@ -1,6 +1,4 @@
 $font-stack:    Helvetica, sans-serif
-$dummy-color: #ff0000
-
 
 $clickable-button-text-color: #aaaaaa
 html
@@ -8,7 +6,6 @@ html
     width: 100%
     body
         font: 100% $font-stack
-        color: $dummy-color
         height: 100%
         width: 100%
 
@@ -60,7 +57,20 @@ html
             border-radius: 10px
             padding: 10px
 
-        .ourButton
-                    background-color: red
-                    border: 1px solid blue
-                    border-radius: 100px
+        .genericButton
+            background-color: rgba(120, 120, 120, 0.3)
+            border: 1px solid rgba(120, 120, 120, 0.6)
+            border-radius: 5px
+            padding: 5px 10px
+            width: fit-content
+            height: fit-content
+
+            $buttonHoverColor: rgba(20, 20, 150, 0.2)
+            @keyframes buttonHover
+                0%  
+                100%
+                    background-color: $buttonHoverColor
+                    border: 1px solid $buttonHoverColor
+                    
+            &:hover
+                animation: 1s ease forwards buttonHover
