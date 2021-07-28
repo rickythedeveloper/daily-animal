@@ -7,7 +7,7 @@ interface BreedDataRenderer {
 
 const BreedContainer = (): HTMLDivElement => {
 	const elem = document.createElement('div');
-	elem.id = 'breedContainer';
+	elem.classList.add('breedContainer');
 	elem.innerHTML = '';
 	return elem;
 };

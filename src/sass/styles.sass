@@ -9,7 +9,7 @@ html
         height: 100%
         width: 100%
 
-        .container
+        #container
             display: grid
             grid-template-columns: minmax(100px, 20%) 1fr
             height: 100%
@@ -26,7 +26,7 @@ html
             #content
                 padding: 0 20px
 
-                #breedContainer
+                .breedContainer
                     display: flex
                     flex-direction: column
                     align-items: center
@@ -67,7 +67,6 @@ html
 
             $buttonHoverColor: rgba(20, 20, 150, 0.2)
             @keyframes buttonHover
-                0%  
                 100%
                     background-color: $buttonHoverColor
                     border: 1px solid $buttonHoverColor

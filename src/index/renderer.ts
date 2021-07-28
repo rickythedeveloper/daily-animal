@@ -3,20 +3,33 @@ import { ipcRenderer } from 'electron';
 import { MessageType } from './constants';
 import BreedContainerElem, { BreedDataRenderer } from '../components/BreedContainerElem';
 import GenericButton from '../components/GenericButton';
+import SideBar from '../components/SideBar';
+import Content from '../components/Content';
 
-const contentElem = document.getElementById('content') as HTMLDivElement | null;
+const container = document.getElementById('container') as HTMLDivElement;
+const sideBar = SideBar([
+	{ title: 'Breed', onClick: () => {} },
+]);
+const contentElem = Content();
+container.appendChild(sideBar);
+container.appendChild(contentElem);
+
+let breedContainer = document.createElement('div');
 // eslint-disable-next-line @typescript-eslint/no-use-before-define
 const nextBreedButton = GenericButton('Get next breed', onNextBreedPress);
-
-function showBreedData(data: BreedDataRenderer | null) {
-	if (contentElem === null) return;
-	contentElem.innerHTML = '';
-	contentElem.appendChild(nextBreedButton);
-	if (data !== null) contentElem.appendChild(BreedContainerElem(data));
-}
+contentElem.appendChild(nextBreedButton);
+contentElem.appendChild(breedContainer);
 
 async function getNextBreedData(): Promise<BreedDataRenderer | null> {
 	return await ipcRenderer.invoke(MessageType[MessageType.requestNextBreedData]) as BreedDataRenderer | null;
+}
+
+function showBreedData(data: BreedDataRenderer | null) {
+	if (data === null) return;
+	const newBreedContainer = BreedContainerElem(data);
+	// contentElem.appendChild(breedContainer);
+	contentElem.replaceChild(newBreedContainer, breedContainer);
+	breedContainer = newBreedContainer;
 }
 
 async function onNextBreedPress() {
@@ -24,20 +37,4 @@ async function onNextBreedPress() {
 	showBreedData(data);
 }
 
-function sideBarText(str: string, onClick: (ev: MouseEvent) => void): HTMLDivElement {
-	const elem = document.createElement('div');
-	elem.classList.add('sideBarText');
-	elem.innerHTML = str;
-	elem.onclick = (event) => onClick(event);
-	return elem;
-}
-
-function configureSidebar() {
-	const sideBar = document.getElementById('sideBar');
-	if (sideBar === null) return;
-	sideBar.appendChild(sideBarText('Random dog', () => {}));
-	sideBar.appendChild(sideBarText('Breed', () => console.log('haha')));
-}
-
-configureSidebar();
-showBreedData(null);
+onNextBreedPress();
