@@ -27,6 +27,13 @@ const BreedTemperamentElem = (temperament: string): HTMLDivElement => {
 	return elem;
 };
 
+const MetricElement = (key: string, value: string | undefined): HTMLDivElement | null => {
+	if (value === undefined) return null;
+	const elem = document.createElement('div');
+	elem.innerText = `${key}: ${value}`;
+	return elem;
+};
+
 const ImageContainer = (url: string): HTMLDivElement => {
 	const imgElem = document.createElement('img');
 	imgElem.classList.add('breedImage');
@@ -50,9 +57,16 @@ const ImagesContainer = (photoUrls: string[]): HTMLDivElement => {
 	return elem;
 };
 
+function appendChild(parent: HTMLElement, child: HTMLElement | null) {
+	if (child) parent.appendChild(child);
+}
+
 const BreedContainerElem = ({ breedData, photoUrls }: BreedDataRenderer): HTMLDivElement => {
 	const elem = BreedContainer();
 	elem.appendChild(BreedNameElem(breedData.name || ''));
+	appendChild(elem, MetricElement('Also known as', breedData.alt_names));
+	appendChild(elem, MetricElement('Breed Group', breedData.breed_group));
+	appendChild(elem, MetricElement('Life Span', breedData.life_span));
 	elem.appendChild(BreedTemperamentElem(breedData.temperament || ''));
 	elem.appendChild(ImagesContainer(photoUrls));
 	return elem;
