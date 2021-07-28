@@ -2,7 +2,7 @@ import { app, BrowserWindow, ipcMain } from 'electron';
 import electronReload from 'electron-reload';
 import path from 'path';
 import { MessageType } from './constants';
-import { BreedData, getBreeds, getBreedPhotos } from './accessDogAPI';
+import { BreedData, getBreeds, getBreedPhotos } from '../models/accessDogAPI';
 import { BreedDataRenderer } from '../components/BreedContainerElem';
 
 const hardRefresh = false;

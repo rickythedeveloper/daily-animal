@@ -1,4 +1,4 @@
-import { BreedData } from '../index/accessDogAPI';
+import { BreedData } from '../models/accessDogAPI';
 
 interface BreedDataRenderer {
 	breedData: BreedData;
