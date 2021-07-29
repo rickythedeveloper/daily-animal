@@ -8,7 +8,7 @@
 		"start": "npm run build && electron .",
 		"lint": "eslint src/ --ext .ts --fix",
 		"build": "rm -r build/* && npm run copy && npm run buildSass && tsc",
-		"copy": "copyfiles --up 1 src/**/*.html build",
+		"copy": "copyfiles --up 1 src/**/*.{html,svg} build",
 		"buildSass": "sass src/sass:build/sass",
 		"tsc": "tsc",
 		"watch": "npm-watch"
