@@ -15,10 +15,6 @@ container.appendChild(sideBar);
 container.appendChild(contentElem);
 
 let breedContainer = document.createElement('div');
-// eslint-disable-next-line @typescript-eslint/no-use-before-define
-const nextBreedButton = GenericButton('Get next breed', onNextBreedPress);
-contentElem.appendChild(nextBreedButton);
-contentElem.appendChild(breedContainer);
 
 async function getNextBreedData(): Promise<BreedDataRenderer | null> {
 	return await ipcRenderer.invoke(MessageType[MessageType.requestNextBreedData]) as BreedDataRenderer | null;
@@ -36,5 +32,9 @@ async function onNextBreedPress() {
 	const data = await getNextBreedData();
 	showBreedData(data);
 }
+
+const nextBreedButton = GenericButton('Get next breed', 'blue', onNextBreedPress);
+contentElem.appendChild(nextBreedButton);
+contentElem.appendChild(breedContainer);
 
 onNextBreedPress();
