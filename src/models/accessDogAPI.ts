@@ -1,9 +1,5 @@
 import axios from 'axios';
 
-enum MeasurementType {
-	length,
-	weight,
-}
 interface MeasurementObject {
 	imperial: string;
 	metric: string;
@@ -31,68 +27,56 @@ interface BreedDataAPI {
 	wikipedia_url?: string;
 }
 
-enum Unit {
-	cm,
-	inch,
-	year,
-	lb,
-	kg,
-}
-interface MeasurementRange {
+export interface NumberRange {
 	min: number;
-	max: number | undefined;
-	unit: Unit;
+	max: number;
 }
-interface BreedData {
+interface Weight {
+	lb: NumberRange | number;
+	kg: NumberRange | number;
+}
+interface Height {
+	cm: NumberRange | number;
+	in: NumberRange | number;
+}
+interface TimeSpan {
+	yr: NumberRange | number;
+}
+export interface BreedData {
 	alt_names?: string[];
 	bred_for?: string;
 	breed_group?: string;
 	country_code?: string;
-	height?: MeasurementRange[];
+	height: Height;
 	id?: string;
 	image?: Image;
-	life_span?: MeasurementRange;
+	life_span?: TimeSpan;
 	name?: string;
 	origin?: string;
 	reference_image_id?: string;
 	temperament?: string[];
-	weight?: MeasurementRange[];
+	weight?: Weight;
 	wikipedia_url?: string;
 }
 
-function splitWidhHiphen(str: string): string[] {
-	let newStr = str.split(' - ');
-	if (newStr.length === 0) newStr = str.split(' – ');
-	return newStr;
+function splitWidhHiphen(str: string): number[] {
+	let newStrings = str.split(' - ');
+	if (newStrings.length === 1 && newStrings[0] === str) newStrings = str.split(' – ');
+	const newNums = newStrings.map((newString) => Number(newString));
+	return newNums;
 }
 
-function measurementObject2MeasurementRanges(length: MeasurementObject, type: MeasurementType): MeasurementRange[] {
-	const strings = [length.imperial, length.metric];
-	const units = type === MeasurementType.length ? [Unit.inch, Unit.cm] : [Unit.lb, Unit.kg];
-
-	const measurements = strings.map((str, index) => {
-		const numsStr = splitWidhHiphen(str);
-		const nums = numsStr.map((numStr) => Number(numStr));
-		const measurement: MeasurementRange = {
-			min: nums[0],
-			max: nums[1],
-			unit: units[index],
-		};
-		return measurement;
-	});
-	return measurements;
-}
-
-function lifespan2Measurement(lifespan: string): MeasurementRange | null {
-	const str = lifespan.replace(' years', '');
-	const numsString = splitWidhHiphen(str);
-	const nums = numsString.map((numStr) => Number(numStr));
-	const measurement: MeasurementRange = {
-		min: nums[0],
-		max: nums[1],
-		unit: Unit.year,
-	};
-	return measurement;
+function nums2Range(nums: number[]): NumberRange | number {
+	switch (nums.length) {
+		case 0:
+			return -1;
+		case 1:
+			return nums[0];
+		case 2:
+			return { min: nums[0], max: nums[1] };
+		default:
+			return -1;
+	}
 }
 
 function convertAPIDataToBackendData(breedDataAPI: BreedDataAPI): BreedData {
@@ -100,10 +84,30 @@ function convertAPIDataToBackendData(breedDataAPI: BreedDataAPI): BreedData {
 		...breedDataAPI,
 	};
 	if (breedDataAPI.alt_names) newData.alt_names = breedDataAPI.alt_names.split(', ');
-	if (breedDataAPI.height) newData.height = measurementObject2MeasurementRanges(breedDataAPI.height, MeasurementType.length); // eslint-disable-line max-len
-	if (breedDataAPI.life_span) newData.life_span = lifespan2Measurement(breedDataAPI.life_span);
+	if (breedDataAPI.height) {
+		const cmHeights = splitWidhHiphen(breedDataAPI.height.metric);
+		const inHeights = splitWidhHiphen(breedDataAPI.height.imperial);
+		newData.height = {
+			cm: nums2Range(cmHeights),
+			in: nums2Range(inHeights),
+		};
+	}
+	if (breedDataAPI.life_span) {
+		const rangeString = breedDataAPI.life_span.replace(' years', '').replace(' Years', '');
+		const nums = splitWidhHiphen(rangeString);
+		newData.life_span = {
+			yr: nums2Range(nums),
+		};
+	}
 	if (breedDataAPI.temperament) newData.temperament = breedDataAPI.temperament.split(', ');
-	if (breedDataAPI.weight) newData.weight = measurementObject2MeasurementRanges(breedDataAPI.weight, MeasurementType.weight); // eslint-disable-line max-len
+	if (breedDataAPI.weight) {
+		const kgWeights = splitWidhHiphen(breedDataAPI.weight.metric);
+		const lbWeights = splitWidhHiphen(breedDataAPI.weight.imperial);
+		newData.weight = {
+			kg: nums2Range(kgWeights),
+			lb: nums2Range(lbWeights),
+		};
+	}
 
 	return newData;
 }
@@ -115,21 +119,17 @@ const config = {
 	},
 };
 
-async function getBreeds(): Promise<BreedData[]> {
+export async function getBreeds(): Promise<BreedData[]> {
 	const url = 'https://api.thedogapi.com/v1/breeds';
 	const { data }: { data: BreedDataAPI[] } = await axios.get(url, config);
 	const convertedData = data.map((breedDataAPI) => convertAPIDataToBackendData(breedDataAPI));
 	return convertedData;
 }
 
-async function getBreedPhotos(breedId: string): Promise<Image[]> {
+export async function getBreedPhotos(breedId: string): Promise<Image[]> {
 	const maxPhotos = 20;
 	// const breedIdDummy = 1;
 	const url = `https://api.thedogapi.com/v1/images/search?breed_id=${breedId}&limit=${maxPhotos}`;
 	const { data }: { data: Image[] } = await axios.get(url, config);
 	return data;
 }
-
-export {
-	BreedData, getBreeds, getBreedPhotos, Unit, MeasurementRange,
-};

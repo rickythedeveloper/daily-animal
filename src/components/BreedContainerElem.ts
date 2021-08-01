@@ -1,4 +1,4 @@
-import { BreedData, Unit, MeasurementRange } from '../models/accessDogAPI';
+import { BreedData, NumberRange } from '../models/accessDogAPI';
 
 interface BreedDataRenderer {
 	breedData: BreedData;
@@ -77,22 +77,12 @@ const ImagesContainer = (photoUrls: string[]): HTMLDivElement => {
 	return elem;
 };
 
-function lifespanStr(lifespan: MeasurementRange) {
-	let theStr = `${lifespan.min}`;
-	if (lifespan.max) {
-		theStr = theStr.concat(` - ${lifespan.max}`);
+function rangeString(range: NumberRange | number): string {
+	if (typeof range === 'number') {
+	// if (range instanceof Number) {
+		return `${range}`;
 	}
-	theStr = theStr.concat(' years');
-	return theStr;
-}
-
-function measurementStr(measurement: MeasurementRange) {
-	let theStr = `${measurement.min}`;
-	if (measurement.max) {
-		theStr = theStr.concat(` - ${measurement.max}`);
-	}
-	theStr = theStr.concat(` ${Unit[measurement.unit]}`);
-	return theStr;
+	return `${(range as NumberRange).min} - ${(range as NumberRange).max}`;
 }
 
 const BreedContainerElem = ({ breedData, photoUrls }: BreedDataRenderer): HTMLDivElement => {
@@ -103,11 +93,11 @@ const BreedContainerElem = ({ breedData, photoUrls }: BreedDataRenderer): HTMLDi
 		{ iconPath: '../assets/pets_black_24dp.svg', value: breedData.breed_group },
 		{
 			iconPath: '../assets/favorite_border_black_24dp.svg',
-			value: breedData.life_span ? lifespanStr(breedData.life_span) : undefined,
+			value: breedData.life_span ? `${rangeString(breedData.life_span.yr)} years` : undefined,
 		},
 		{
 			iconPath: '../assets/height_black_24dp.svg',
-			value: breedData.height ? measurementStr(breedData.height[0]) : undefined, // eslint-disable-line max-len
+			value: breedData.height ? `${rangeString(breedData.height.cm)} cm` : undefined, // eslint-disable-line max-len
 		},
 		{ iconPath: '../assets/list_black_24dp.svg', value: breedData.temperament?.join(', ') },
 	]);
