@@ -20,10 +20,39 @@ const BreedNameElem = (name: string): HTMLDivElement => {
 	return elem;
 };
 
-const BreedTemperamentElem = (temperament: string): HTMLDivElement => {
+interface MetricData {
+	iconPath: string;
+	value: string | undefined;
+}
+
+function getSvgElement(filepath: string): HTMLImageElement {
+	const elem = document.createElement('img');
+	elem.src = filepath;
+	return elem;
+}
+
+const MetricElement = (data: MetricData): HTMLDivElement | null => {
+	if (data.value === undefined) return null;
 	const elem = document.createElement('div');
-	elem.classList.add('breedTemperament');
-	elem.innerHTML = temperament;
+	elem.classList.add('metric');
+
+	const icon = getSvgElement(data.iconPath);
+	icon.classList.add('metricIcon');
+	elem.appendChild(icon);
+
+	const valueElem = document.createElement('div');
+	valueElem.innerText = data.value;
+	valueElem.classList.add('metricValue');
+	elem.appendChild(valueElem);
+	return elem;
+};
+
+const Metrics = (data: MetricData[]): HTMLDivElement => {
+	const elem = document.createElement('div');
+	data.forEach((metric) => {
+		const child = MetricElement(metric);
+		if (child) elem.appendChild(child);
+	});
 	return elem;
 };
 
@@ -42,8 +71,6 @@ const ImageContainer = (url: string): HTMLDivElement => {
 const ImagesContainer = (photoUrls: string[]): HTMLDivElement => {
 	const elem = document.createElement('div');
 	elem.classList.add('imagesContainer');
-	// addPhotos(elem, photoUrls);
-
 	photoUrls.forEach((url) => {
 		elem.appendChild(ImageContainer(url));
 	});
@@ -53,7 +80,14 @@ const ImagesContainer = (photoUrls: string[]): HTMLDivElement => {
 const BreedContainerElem = ({ breedData, photoUrls }: BreedDataRenderer): HTMLDivElement => {
 	const elem = BreedContainer();
 	elem.appendChild(BreedNameElem(breedData.name || ''));
-	elem.appendChild(BreedTemperamentElem(breedData.temperament || ''));
+	const metrics = Metrics([
+		{ iconPath: '../assets/pets_black_24dp.svg', value: breedData.alt_names },
+		{ iconPath: '../assets/pets_black_24dp.svg', value: breedData.breed_group },
+		{ iconPath: '../assets/favorite_border_black_24dp.svg', value: breedData.life_span },
+		{ iconPath: '../assets/height_black_24dp.svg', value: breedData.height?.metric },
+		{ iconPath: '../assets/list_black_24dp.svg', value: breedData.temperament },
+	]);
+	elem.appendChild(metrics);
 	elem.appendChild(ImagesContainer(photoUrls));
 	return elem;
 };

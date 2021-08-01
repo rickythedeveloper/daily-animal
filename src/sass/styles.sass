@@ -1,4 +1,10 @@
+@use "sass:map"
+    
 $font-stack:    Helvetica, sans-serif
+
+$themeColors: (blue: (heavy: #11b, medium: #36f, light: #6af, superLight: #9df), red: (heavy: #c11, medium: #e33, light: #f66), green: (heavy: #1a1, medium: #3c3, light: #afa))
+$commonColors: (highlight: #7773)
+$transitionDuration: 0.3s
 
 $clickable-button-text-color: #aaaaaa
 html
@@ -30,9 +36,20 @@ html
                     display: flex
                     flex-direction: column
                     align-items: center
-                    
-                    .breedTemperament
-                        color: #333333
+
+                    .metric
+                        display: flex
+                        flex-direction: row
+                        align-items: flex-start
+
+                        .metricIcon
+                            width: 30px
+                            margin-right: 10px
+                            user-select: none
+
+                        .metricValue
+                            line-height: 30px
+                            font-size: 20px
 
                     .imagesContainer
                         display: grid
@@ -52,24 +69,22 @@ html
                 
                     
         .clickable
-            color: #777777
-            background-color: rgba(128, 128, 128, 0.05)
-            border-radius: 10px
-            padding: 10px
-
-        .genericButton
-            background-color: rgba(120, 120, 120, 0.3)
-            border: 1px solid rgba(120, 120, 120, 0.6)
+            transition: background-color $transitionDuration
             border-radius: 5px
-            padding: 5px 10px
-            width: fit-content
-            height: fit-content
-
-            $buttonHoverColor: rgba(20, 20, 150, 0.2)
-            @keyframes buttonHover
-                100%
-                    background-color: $buttonHoverColor
-                    border: 1px solid $buttonHoverColor
-                    
+            padding: 5px
             &:hover
-                animation: 1s ease forwards buttonHover
+                background-color: map.get($commonColors, highlight)
+
+        @each $familyName, $themeColorFamily in $themeColors
+            .genericButton-#{$familyName}
+                background-color: map.get($themeColorFamily, medium)
+                color: white
+                border-radius: 5px
+                padding: 10px 12px
+                width: fit-content
+                height: fit-content
+                transition: all $transitionDuration ease
+                user-select: none
+                        
+                &:hover
+                    background-color: map.get($themeColorFamily, heavy)
