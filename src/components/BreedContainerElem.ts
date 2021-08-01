@@ -1,4 +1,4 @@
-import { BreedData } from '../models/accessDogAPI';
+import { BreedData, Unit, MeasurementRange } from '../models/accessDogAPI';
 
 interface BreedDataRenderer {
 	breedData: BreedData;
@@ -77,15 +77,39 @@ const ImagesContainer = (photoUrls: string[]): HTMLDivElement => {
 	return elem;
 };
 
+function lifespanStr(lifespan: MeasurementRange) {
+	let theStr = `${lifespan.min}`;
+	if (lifespan.max) {
+		theStr = theStr.concat(` - ${lifespan.max}`);
+	}
+	theStr = theStr.concat(' years');
+	return theStr;
+}
+
+function measurementStr(measurement: MeasurementRange) {
+	let theStr = `${measurement.min}`;
+	if (measurement.max) {
+		theStr = theStr.concat(` - ${measurement.max}`);
+	}
+	theStr = theStr.concat(` ${Unit[measurement.unit]}`);
+	return theStr;
+}
+
 const BreedContainerElem = ({ breedData, photoUrls }: BreedDataRenderer): HTMLDivElement => {
 	const elem = BreedContainer();
 	elem.appendChild(BreedNameElem(breedData.name || ''));
 	const metrics = Metrics([
-		{ iconPath: '../assets/pets_black_24dp.svg', value: breedData.alt_names },
+		{ iconPath: '../assets/pets_black_24dp.svg', value: breedData.alt_names?.join(', ') },
 		{ iconPath: '../assets/pets_black_24dp.svg', value: breedData.breed_group },
-		{ iconPath: '../assets/favorite_border_black_24dp.svg', value: breedData.life_span },
-		{ iconPath: '../assets/height_black_24dp.svg', value: breedData.height?.metric },
-		{ iconPath: '../assets/list_black_24dp.svg', value: breedData.temperament },
+		{
+			iconPath: '../assets/favorite_border_black_24dp.svg',
+			value: breedData.life_span ? lifespanStr(breedData.life_span) : undefined,
+		},
+		{
+			iconPath: '../assets/height_black_24dp.svg',
+			value: breedData.height ? measurementStr(breedData.height[0]) : undefined, // eslint-disable-line max-len
+		},
+		{ iconPath: '../assets/list_black_24dp.svg', value: breedData.temperament?.join(', ') },
 	]);
 	elem.appendChild(metrics);
 	elem.appendChild(ImagesContainer(photoUrls));
