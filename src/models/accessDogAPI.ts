@@ -54,7 +54,7 @@ export interface BreedData {
 	name?: string;
 	origin?: string;
 	reference_image_id?: string;
-	temperament?: string[];
+	temperaments?: string[];
 	weight?: Weight;
 	wikipedia_url?: string;
 }
@@ -99,7 +99,7 @@ function convertAPIDataToBackendData(breedDataAPI: BreedDataAPI): BreedData {
 			yr: nums2Range(nums),
 		};
 	}
-	if (breedDataAPI.temperament) newData.temperament = breedDataAPI.temperament.split(', ');
+	if (breedDataAPI.temperament) newData.temperaments = breedDataAPI.temperament.split(', ');
 	if (breedDataAPI.weight) {
 		const kgWeights = splitWidhHiphen(breedDataAPI.weight.metric);
 		const lbWeights = splitWidhHiphen(breedDataAPI.weight.imperial);
@@ -119,10 +119,47 @@ const config = {
 	},
 };
 
+function organisedBreedsData(breeds: BreedData[]): {
+	groupToIds: { [key: string]: string[] };
+	temperamentToIds: { [key: string]: string[] };
+	idToBreed: { [key: string]: BreedData };
+} {
+	const groupToIds: { [key: string]: string[] } = {};
+	const temperamentToIds: { [key: string]: string[] } = {};
+	const idToBreed: { [key: string]: BreedData } = {};
+	breeds.forEach((breed) => {
+		const { id, breed_group: group, temperaments } = breed;
+		if (id) {
+			if (group) {
+				if (group in groupToIds) {
+					groupToIds[group].push(id);
+				} else {
+					groupToIds[group] = [id];
+				}
+			}
+
+			if (temperaments) {
+				temperaments.forEach((temperament) => {
+					if (temperament in temperamentToIds) {
+						temperamentToIds[temperament].push(id);
+					} else {
+						temperamentToIds[temperament] = [id];
+					}
+				});
+			}
+
+			idToBreed[id] = breed;
+		}
+	});
+
+	return { groupToIds, temperamentToIds, idToBreed };
+}
+
 export async function getBreeds(): Promise<BreedData[]> {
 	const url = 'https://api.thedogapi.com/v1/breeds';
 	const { data }: { data: BreedDataAPI[] } = await axios.get(url, config);
 	const convertedData = data.map((breedDataAPI) => convertAPIDataToBackendData(breedDataAPI));
+	const { idToBreed, temperamentToIds, groupToIds } = organisedBreedsData(convertedData);
 	return convertedData;
 }
 

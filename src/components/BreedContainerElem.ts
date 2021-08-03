@@ -99,7 +99,7 @@ const BreedContainerElem = ({ breedData, photoUrls }: BreedDataRenderer): HTMLDi
 			iconPath: '../assets/height_black_24dp.svg',
 			value: breedData.height ? `${rangeString(breedData.height.cm)} cm` : undefined, // eslint-disable-line max-len
 		},
-		{ iconPath: '../assets/list_black_24dp.svg', value: breedData.temperament?.join(', ') },
+		{ iconPath: '../assets/list_black_24dp.svg', value: breedData.temperaments?.join(', ') },
 	]);
 	elem.appendChild(metrics);
 	elem.appendChild(ImagesContainer(photoUrls));
