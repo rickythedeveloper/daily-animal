@@ -18,7 +18,7 @@ const RandomBreedPage = (getNextBreedData: () => Promise<BreedDataRenderer | nul
 	}
 
 	const nextBreedButton = GenericButton('Get next breed', 'blue', onNextBreedPress);
-	page.appendChild(nextBreedButton);
+	page.appendChild(nextBreedButton.element);
 	page.appendChild(breedContainer);
 
 	return page;
