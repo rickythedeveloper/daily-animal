@@ -119,11 +119,14 @@ const config = {
 	},
 };
 
+interface GroupToIds {[key: string]: string[]}
+interface TemperamentToIds { [key: string]: string[] }
+interface IdtoBreed { [key: string]: BreedData }
 function organisedBreedsData(breeds: BreedData[]): {
-	groupToIds: { [key: string]: string[] };
+	groupToIds: GroupToIds;
 	unclassifiedBreedIds: string[];
-	temperamentToIds: { [key: string]: string[] };
-	idToBreed: { [key: string]: BreedData };
+	temperamentToIds: TemperamentToIds;
+	idToBreed: IdtoBreed;
 } {
 	const groupToIds: { [key: string]: string[] } = {};
 	const unclassifiedBreedIds: string[] = [];
@@ -161,14 +164,23 @@ function organisedBreedsData(breeds: BreedData[]): {
 	};
 }
 
-export async function getBreeds(): Promise<BreedData[]> {
+export interface DogsData {
+	breedsData: BreedData[];
+	groupToIds: GroupToIds;
+	unclassifiedBreedIds: string[];
+	temperamentToIds: TemperamentToIds;
+	idToBreed: IdtoBreed;
+}
+export async function getBreeds(): Promise<DogsData> {
 	const url = 'https://api.thedogapi.com/v1/breeds';
 	const { data }: { data: BreedDataAPI[] } = await axios.get(url, config);
 	const convertedData = data.map((breedDataAPI) => convertAPIDataToBackendData(breedDataAPI));
 	const {
 		idToBreed, unclassifiedBreedIds, temperamentToIds, groupToIds,
 	} = organisedBreedsData(convertedData);
-	return convertedData;
+	return {
+		breedsData: convertedData, idToBreed, unclassifiedBreedIds, temperamentToIds, groupToIds,
+	};
 }
 
 export async function getBreedPhotos(breedId: string): Promise<Image[]> {
