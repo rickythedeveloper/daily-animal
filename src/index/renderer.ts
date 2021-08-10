@@ -18,4 +18,4 @@ async function getNextBreedData(): Promise<BreedDataRenderer | null> {
 	return await ipcRenderer.invoke(MessageType[MessageType.requestNextBreedData]) as BreedDataRenderer | null;
 }
 
-contentElem.appendChild(RandomBreedPage(getNextBreedData));
+contentElem.appendChild(RandomBreedPage(getNextBreedData).element);

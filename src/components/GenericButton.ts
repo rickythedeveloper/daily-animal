@@ -8,7 +8,7 @@ enum GenericButtonStyleEnum {
 
 type GenericButtonStyle = keyof typeof GenericButtonStyleEnum;
 
-const GenericButton = (text: string, style: GenericButtonStyle, onclick: (event: MouseEvent) => void): Component => {
+const GenericButton = (text: string, style: GenericButtonStyle, onclick: (event: MouseEvent) => void): Component<'div'> => {
 	const component = Component.new('div');
 	component.element.onclick = onclick;
 	component.element.classList.add(`genericButton-${style}`);
