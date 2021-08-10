@@ -1,23 +1,23 @@
 import { BreedData, NumberRange } from '../models/accessDogAPI';
+import Component from '../models/Component';
 
 interface BreedDataRenderer {
 	breedData: BreedData;
 	photoUrls: string[];
 }
 
-const BreedContainer = (): HTMLDivElement => {
-	const elem = document.createElement('div');
-	elem.classList.add('breedContainer');
-	elem.innerHTML = '';
-	return elem;
+const BreedContainer = (): Component<'div'> => {
+	const component = Component.new('div');
+	component.element.classList.add('breedContainer');
+	component.element.innerHTML = '';
+	return component;
 };
 
-const BreedNameElem = (name: string): HTMLDivElement => {
-	const elem = document.createElement('div');
-	elem.classList.add('breedName', 'clickable');
-	const breedName = name;
-	elem.innerHTML = breedName;
-	return elem;
+const BreedNameElem = (name: string): Component<'div'> => {
+	const component = Component.new('div');
+	component.element.classList.add('breedName', 'clickable');
+	component.element.innerHTML = name;
+	return component;
 };
 
 interface MetricData {
@@ -25,56 +25,56 @@ interface MetricData {
 	value: string | undefined;
 }
 
-function getSvgElement(filepath: string): HTMLImageElement {
-	const elem = document.createElement('img');
-	elem.src = filepath;
-	return elem;
+function getSvgElement(filepath: string): Component<'img'> {
+	const component = Component.new('img');
+	component.element.src = filepath;
+	return component;
 }
 
-const MetricElement = (data: MetricData): HTMLDivElement | null => {
+const MetricElement = (data: MetricData): Component<'div'> | null => {
 	if (data.value === undefined) return null;
-	const elem = document.createElement('div');
-	elem.classList.add('metric');
+	const component = Component.new('div');
+	component.element.classList.add('metric');
 
 	const icon = getSvgElement(data.iconPath);
-	icon.classList.add('metricIcon');
-	elem.appendChild(icon);
+	icon.element.classList.add('metricIcon');
+	component.appendChild(icon);
 
-	const valueElem = document.createElement('div');
-	valueElem.innerText = data.value;
-	valueElem.classList.add('metricValue');
-	elem.appendChild(valueElem);
-	return elem;
+	const valueComponent = Component.new('div');
+	valueComponent.element.innerText = data.value;
+	valueComponent.element.classList.add('metricValue');
+	component.appendChild(valueComponent);
+	return component;
 };
 
-const Metrics = (data: MetricData[]): HTMLDivElement => {
-	const elem = document.createElement('div');
+const Metrics = (data: MetricData[]): Component<'div'> => {
+	const component = Component.new('div');
 	data.forEach((metric) => {
 		const child = MetricElement(metric);
-		if (child) elem.appendChild(child);
+		if (child) component.appendChild(child);
 	});
-	return elem;
+	return component;
 };
 
-const ImageContainer = (url: string): HTMLDivElement => {
-	const imgElem = document.createElement('img');
-	imgElem.classList.add('breedImage');
-	imgElem.src = url;
+const ImageContainer = (url: string): Component<'div'> => {
+	const imgComponent = Component.new('img');
+	imgComponent.element.classList.add('breedImage');
+	imgComponent.element.src = url;
 
-	const imgContainer = document.createElement('div');
-	imgContainer.classList.add('imageContainer');
-	imgContainer.appendChild(imgElem);
+	const imgContainerComponent = Component.new('div');
+	imgContainerComponent.element.classList.add('imageContainer');
+	imgContainerComponent.appendChild(imgComponent);
 
-	return imgContainer;
+	return imgContainerComponent;
 };
 
-const ImagesContainer = (photoUrls: string[]): HTMLDivElement => {
-	const elem = document.createElement('div');
-	elem.classList.add('imagesContainer');
+const ImagesContainer = (photoUrls: string[]): Component<'div'> => {
+	const component = Component.new('div');
+	component.element.classList.add('imagesContainer');
 	photoUrls.forEach((url) => {
-		elem.appendChild(ImageContainer(url));
+		component.appendChild(ImageContainer(url));
 	});
-	return elem;
+	return component;
 };
 
 function rangeString(range: NumberRange | number): string {
@@ -85,7 +85,7 @@ function rangeString(range: NumberRange | number): string {
 	return `${(range as NumberRange).min} - ${(range as NumberRange).max}`;
 }
 
-const BreedContainerElem = ({ breedData, photoUrls }: BreedDataRenderer): HTMLDivElement => {
+const BreedContainerElem = ({ breedData, photoUrls }: BreedDataRenderer): Component<'div'> => {
 	const elem = BreedContainer();
 	elem.appendChild(BreedNameElem(breedData.name || ''));
 	const metrics = Metrics([

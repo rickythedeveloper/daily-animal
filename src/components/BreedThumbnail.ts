@@ -1,25 +1,26 @@
 import { BreedData } from '../models/accessDogAPI';
+import Component from '../models/Component';
 
-const BreedThumbnail = (data: BreedData): HTMLDivElement => {
-	const elem = document.createElement('div');
-	elem.classList.add('breedThumbnail');
+const BreedThumbnail = (data: BreedData): Component<'div'> => {
+	const component = Component.new('div');
+	component.element.classList.add('breedThumbnail');
 
-	if (data.name === undefined) return elem;
+	if (data.name === undefined) return component;
 
-	const breedNameElem = document.createElement('div');
-	breedNameElem.classList.add('breedThumbnailName');
-	breedNameElem.innerText = data.name || '';
-	elem.appendChild(breedNameElem);
+	const breedNameComponent = Component.new('div');
+	breedNameComponent.element.classList.add('breedThumbnailName');
+	breedNameComponent.element.innerText = data.name || '';
+	component.appendChild(breedNameComponent);
 
 	const imageUrl = data.image?.url;
 	if (imageUrl) {
-		const imageElem = document.createElement('img');
-		imageElem.src = imageUrl;
-		imageElem.classList.add('breedThumbnailImage');
-		elem.appendChild(imageElem);
+		const imageComponent = Component.new('img');
+		imageComponent.element.src = imageUrl;
+		imageComponent.element.classList.add('breedThumbnailImage');
+		component.appendChild(imageComponent);
 	}
 
-	return elem;
+	return component;
 };
 
 export default BreedThumbnail;
