@@ -3,8 +3,8 @@ import GenericButton from '../components/GenericButton';
 import Component from '../models/Component';
 
 const RandomBreedPage = (getNextBreedData: () => Promise<BreedDataRenderer | null>): Component<'div'> => {
-	const page = Component.new('div');
-	let breedContainer = Component.new('div');
+	const page = new Component('div');
+	let breedContainer = new Component('div');
 
 	function showBreedData(data: BreedDataRenderer | null) {
 		if (data === null) return;

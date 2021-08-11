@@ -1,26 +1,26 @@
 import { BreedData } from '../models/accessDogAPI';
 import Component from '../models/Component';
 
-const BreedThumbnail = (data: BreedData): Component<'div'> => {
-	const component = Component.new('div');
-	component.element.classList.add('breedThumbnail');
+class BreedThumbnail extends Component<'div'> {
+	constructor(data: BreedData) {
+		super('div');
+		this.element.classList.add('breedThumbnail');
 
-	if (data.name === undefined) return component;
+		if (data.name === undefined) return;
 
-	const breedNameComponent = Component.new('div');
-	breedNameComponent.element.classList.add('breedThumbnailName');
-	breedNameComponent.element.innerText = data.name || '';
-	component.appendChild(breedNameComponent);
+		const breedNameComponent = new Component('div');
+		breedNameComponent.element.classList.add('breedThumbnailName');
+		breedNameComponent.element.innerText = data.name || '';
+		this.appendChild(breedNameComponent);
 
-	const imageUrl = data.image?.url;
-	if (imageUrl) {
-		const imageComponent = Component.new('img');
-		imageComponent.element.src = imageUrl;
-		imageComponent.element.classList.add('breedThumbnailImage');
-		component.appendChild(imageComponent);
+		const imageUrl = data.image?.url;
+		if (imageUrl) {
+			const imageComponent = new Component('img');
+			imageComponent.element.src = imageUrl;
+			imageComponent.element.classList.add('breedThumbnailImage');
+			this.appendChild(imageComponent);
+		}
 	}
-
-	return component;
-};
+}
 
 export default BreedThumbnail;

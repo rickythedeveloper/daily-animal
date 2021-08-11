@@ -1,12 +1,24 @@
 import OnOffButton from './OnOffButton';
 import Component from '../models/Component';
 
-const SelectionGrid = (titles: string[], onChange: (index: number, selected: boolean) => void): Component<'div'> => {
-	const component = Component.new('div');
-	component.element.classList.add('selectionGrid');
-	const buttons = titles.map((title, index) => OnOffButton(title, (isOn) => onChange(index, isOn)));
-	component.appendChildren(...buttons);
-	return component;
-};
+class SelectionGrid extends Component<'div'> {
+	indicators: boolean[];
+
+	private onChange(index: number, isOn: boolean) {
+		if (index >= this.indicators.length) return;
+		this.indicators[index] = isOn;
+	}
+
+	constructor(public options: string[], onChange: (index: number, isOn: boolean) => void) {
+		super('div');
+		this.element.classList.add('grid');
+		const buttons = options.map((option, index) => OnOffButton(option, (isOn) => {
+			this.onChange(index, isOn);
+			onChange(index, isOn);
+		}));
+		this.appendChildren(...buttons);
+		this.indicators = Array<boolean>(options.length).fill(false);
+	}
+}
 
 export default SelectionGrid;

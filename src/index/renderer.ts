@@ -18,7 +18,7 @@ const contentElem = Content();
 container.appendChild(sideBar);
 container.appendChild(contentElem);
 
-let page = Component.new('div');
+let page = new Component('div');
 contentElem.appendChild(page.element);
 
 function showNewPage(newPage: Component<'div'>) {
@@ -40,7 +40,7 @@ function showRandomBreedPage() {
 
 function showStuff() {
 	getDogsData().then((data) => {
-		showNewPage(BreedGroupsPage(data.breedsData, data.groupToIds));
+		showNewPage(new BreedGroupsPage(data.breedsData, data.groupToIds));
 	});
 	// getNextBreedData().then((breed) => {
 	// 	if (breed !== null) showNewPage(BreedThumbnail(breed.breedData));

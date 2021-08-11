@@ -15,7 +15,7 @@ const GenericButton = (
 	style: GenericButtonStyle,
 	onclick: (event: MouseEvent) => void,
 ): Component<'div'> => {
-	const component = Component.new('div');
+	const component = new Component('div');
 	component.element.onclick = onclick;
 	component.element.classList.add('genericButton', `genericButton-${style}`);
 	component.element.innerText = text;
