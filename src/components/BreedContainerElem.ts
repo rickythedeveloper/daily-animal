@@ -7,14 +7,14 @@ interface BreedDataRenderer {
 }
 
 const BreedContainer = (): Component<'div'> => {
-	const component = Component.new('div');
+	const component = new Component('div');
 	component.element.classList.add('breedContainer');
 	component.element.innerHTML = '';
 	return component;
 };
 
 const BreedNameElem = (name: string): Component<'div'> => {
-	const component = Component.new('div');
+	const component = new Component('div');
 	component.element.classList.add('breedName', 'clickable');
 	component.element.innerHTML = name;
 	return component;
@@ -26,21 +26,21 @@ interface MetricData {
 }
 
 function getSvgElement(filepath: string): Component<'img'> {
-	const component = Component.new('img');
+	const component = new Component('img');
 	component.element.src = filepath;
 	return component;
 }
 
 const MetricElement = (data: MetricData): Component<'div'> | null => {
 	if (data.value === undefined) return null;
-	const component = Component.new('div');
+	const component = new Component('div');
 	component.element.classList.add('metric');
 
 	const icon = getSvgElement(data.iconPath);
 	icon.element.classList.add('metricIcon');
 	component.appendChild(icon);
 
-	const valueComponent = Component.new('div');
+	const valueComponent = new Component('div');
 	valueComponent.element.innerText = data.value;
 	valueComponent.element.classList.add('metricValue');
 	component.appendChild(valueComponent);
@@ -48,7 +48,7 @@ const MetricElement = (data: MetricData): Component<'div'> | null => {
 };
 
 const Metrics = (data: MetricData[]): Component<'div'> => {
-	const component = Component.new('div');
+	const component = new Component('div');
 	data.forEach((metric) => {
 		const child = MetricElement(metric);
 		if (child) component.appendChild(child);
@@ -57,11 +57,11 @@ const Metrics = (data: MetricData[]): Component<'div'> => {
 };
 
 const ImageContainer = (url: string): Component<'div'> => {
-	const imgComponent = Component.new('img');
+	const imgComponent = new Component('img');
 	imgComponent.element.classList.add('breedImage');
 	imgComponent.element.src = url;
 
-	const imgContainerComponent = Component.new('div');
+	const imgContainerComponent = new Component('div');
 	imgContainerComponent.element.classList.add('imageContainer');
 	imgContainerComponent.appendChild(imgComponent);
 
@@ -69,7 +69,7 @@ const ImageContainer = (url: string): Component<'div'> => {
 };
 
 const ImagesContainer = (photoUrls: string[]): Component<'div'> => {
-	const component = Component.new('div');
+	const component = new Component('div');
 	component.element.classList.add('imagesContainer');
 	photoUrls.forEach((url) => {
 		component.appendChild(ImageContainer(url));

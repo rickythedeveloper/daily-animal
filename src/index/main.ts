@@ -2,7 +2,9 @@ import { app, BrowserWindow, ipcMain } from 'electron';
 import electronReload from 'electron-reload';
 import path from 'path';
 import { MessageType } from './constants';
-import { BreedData, getBreeds, getBreedPhotos } from '../models/accessDogAPI';
+import {
+	BreedData, getBreeds, getBreedPhotos, DogsData,
+} from '../models/accessDogAPI';
 import { BreedDataRenderer } from '../components/BreedContainerElem';
 
 const hardRefresh = false;
@@ -54,10 +56,11 @@ app.on('window-all-closed', () => {
 });
 
 // Store the array of BreedData in _breedData but access via breedsData().then(...) due to the nature of promise.
-let _breedsData: BreedData[]; // eslint-disable-line no-underscore-dangle, @typescript-eslint/naming-convention
-const breedsData = async (): Promise<BreedData[]> => {
-	if (_breedsData === undefined) _breedsData = await getBreeds();
-	return _breedsData;
+// eslint-disable-next-line no-underscore-dangle, @typescript-eslint/naming-convention
+let _dogsData: DogsData;
+const dogsData = async (): Promise<DogsData> => {
+	if (_dogsData === undefined) _dogsData = await getBreeds();
+	return _dogsData;
 };
 
 let currentBreedIndex = 0; // index of breed to use in breedsData
@@ -82,14 +85,19 @@ async function getBreedPhotoUrls(breedId: string): Promise<string[]> {
 	return breedPhotoUrls[breedId];
 }
 
+ipcMain.handle(
+	MessageType[MessageType.requestBreedPhotoUrls],
+	async (event, breedId): Promise<string[]> => getBreedPhotoUrls(breedId),
+);
+
 /**
  * Load the next photo urls via the API.
  * @param num The number of breeds to load the photo urls for.
  */
 async function loadNextUrls(num: number) {
 	for (let index = currentBreedIndex + 1; index <= currentBreedIndex + num; index += 1) {
-		breedsData().then((data) => {
-			const { id } = data[index];
+		dogsData().then((data) => {
+			const { id } = data.breedsData[index];
 			if (id !== undefined) loadBreedPhotoUrls(id);
 		});
 	}
@@ -97,8 +105,8 @@ async function loadNextUrls(num: number) {
 
 ipcMain.handle(MessageType[MessageType.requestNextBreedData], async (): Promise<null | BreedDataRenderer> => {
 	currentBreedIndex += 1;
-	return breedsData().then(async (data): Promise<null | BreedDataRenderer> => {
-		const breed = data[currentBreedIndex];
+	return dogsData().then(async (data): Promise<null | BreedDataRenderer> => {
+		const breed = data.breedsData[currentBreedIndex];
 		const { id } = breed;
 		if (id === undefined) return null;
 		return getBreedPhotoUrls(id).then((urls): BreedDataRenderer => {
@@ -111,3 +119,5 @@ ipcMain.handle(MessageType[MessageType.requestNextBreedData], async (): Promise<
 		});
 	});
 });
+
+ipcMain.handle(MessageType[MessageType.requestDogsData], dogsData);

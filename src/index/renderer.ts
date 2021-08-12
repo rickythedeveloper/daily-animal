@@ -5,7 +5,10 @@ import { BreedDataRenderer } from '../components/BreedContainerElem';
 import SideBar from '../components/SideBar';
 import Content from '../components/Content';
 import RandomBreedPage from '../pages/RandomBreedPage';
-import BreedThumbnail from '../components/BreedThumbnail';
+import { DogsData } from '../models/accessDogAPI';
+import BreedGroupsPage from '../pages/BreedGroupsPage';
+import Component from '../models/Component';
+import navigation from '../models/navigation';
 
 const container = document.getElementById('container') as HTMLDivElement;
 const sideBar = SideBar([
@@ -13,25 +16,25 @@ const sideBar = SideBar([
 ]);
 const contentElem = Content();
 container.appendChild(sideBar);
-container.appendChild(contentElem);
+container.appendChild(contentElem.element);
 
-let page = document.createElement('div');
-contentElem.appendChild(page);
-
-function showNewPage(newPage: HTMLDivElement) {
-	contentElem.replaceChild(newPage, page);
-	page = newPage;
-}
+navigation.contentComponent = contentElem;
 
 async function getNextBreedData(): Promise<BreedDataRenderer | null> {
 	return await ipcRenderer.invoke(MessageType[MessageType.requestNextBreedData]) as BreedDataRenderer | null;
 }
 
-// contentElem.appendChild(RandomBreedPage(getNextBreedData).element);
+async function getDogsData(): Promise<DogsData> {
+	return await ipcRenderer.invoke(MessageType[MessageType.requestDogsData]) as DogsData;
+}
+
+function showRandomBreedPage() {
+	navigation.navigate(RandomBreedPage(getNextBreedData));
+}
 
 function showStuff() {
-	getNextBreedData().then((breed) => {
-		if (breed !== null) showNewPage(BreedThumbnail(breed.breedData).element);
+	getDogsData().then((data) => {
+		navigation.navigate(new BreedGroupsPage(data.breedsData, data.groupToIds));
 	});
 }
 

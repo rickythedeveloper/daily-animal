@@ -3,7 +3,7 @@
 $font-stack:    Helvetica, sans-serif
 
 $themeColors: ('blue': (heavy: #11b, medium: #36f, light: #6af, superLight: #9df), 'red': (heavy: #c11, medium: #e33, light: #f66), 'green': (heavy: #1a1, medium: #3c3, light: #afa))
-$commonColors: (highlight: #7773)
+$commonColors: (highlight: #7773, transparent: #0000)
 $transitionDuration: 0.3s
 
 $clickable-button-text-color: #aaaaaa
@@ -85,7 +85,7 @@ html
                         flex: 1 1 auto
                         width: 100%
                         object-fit: cover
-
+                .breedGroupsPage
                     
         .clickable
             transition: background-color $transitionDuration
@@ -94,16 +94,40 @@ html
             &:hover
                 background-color: map.get($commonColors, highlight)
 
+        .genericButton
+            border-radius: 5px
+            padding: 10px 12px
+            width: fit-content
+            height: fit-content
+            transition: all $transitionDuration ease
+            user-select: none
+
         @each $familyName, $themeColorFamily in $themeColors
             .genericButton-#{$familyName}
                 background-color: map.get($themeColorFamily, medium)
                 color: white
-                border-radius: 5px
-                padding: 10px 12px
-                width: fit-content
-                height: fit-content
-                transition: all $transitionDuration ease
-                user-select: none
                         
                 &:hover
                     background-color: map.get($themeColorFamily, heavy)
+
+        .genericButton-default
+            background-color: map.get($commonColors, transparent)
+            color: black
+
+            &:hover
+                background-color: map.get($commonColors, highlight)
+
+
+        .buttonOn
+            user-select: none
+            background-color: green
+
+        .buttonOff
+            user-select: none
+            background-color: red
+
+        .grid
+            display: flex
+            flex-direction: row
+            flex-wrap: wrap
+            gap: 10px

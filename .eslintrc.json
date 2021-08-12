@@ -28,6 +28,7 @@
 				}
 			}
 		],
-		"no-continue": ["off"]
+		"no-continue": ["off"],
+		"no-underscore-dangle": ["error", { "allowAfterThis": true }]
 	}
 }

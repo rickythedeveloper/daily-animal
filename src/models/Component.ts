@@ -18,22 +18,35 @@ class Component<T extends keyof HTMLElementTagNameMap> {
 		});
 	}
 
-	constructor(element: HTMLElementTagNameMap[T], children?: Component<any>[]) {
-		this._element = element;
-		this._children = children || [];
+	constructor(tag: T) {
+		this._element = document.createElement(tag);
+		this._children = [];
 	}
 
-	static new<K extends keyof HTMLElementTagNameMap>(tag: K): Component<K> {
-		return new Component(document.createElement(tag));
+	static fromElement<K extends keyof HTMLElementTagNameMap>(
+		tag: K,
+		element: HTMLElementTagNameMap[K],
+		children?: Component<any>[],
+	): Component<K> {
+		const component = new Component(tag);
+		component._element = element; // eslint-disable-line no-underscore-dangle
+		component._children = children || []; // eslint-disable-line no-underscore-dangle
+		return component;
 	}
 
 	appendChild(component: Component<any>) {
-		this.appendChildren(component)
+		this.appendChildren(component);
 	}
 
 	appendChildren(...components: Component<any>[]) {
 		const newChildren = [...this.children, ...components];
 		this.children = newChildren;
+	}
+
+	removeChild(child: Component<any>) {
+		const oldChildIndex = this.children.indexOf(child);
+		if (oldChildIndex === -1) return;
+		this.children.splice(oldChildIndex, 1);
 	}
 
 	replaceChild(newChild: Component<any>, oldChild: Component<any>) {
