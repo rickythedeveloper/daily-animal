@@ -85,6 +85,11 @@ async function getBreedPhotoUrls(breedId: string): Promise<string[]> {
 	return breedPhotoUrls[breedId];
 }
 
+ipcMain.handle(
+	MessageType[MessageType.requestBreedPhotoUrls],
+	async (event, breedId): Promise<string[]> => getBreedPhotoUrls(breedId),
+);
+
 /**
  * Load the next photo urls via the API.
  * @param num The number of breeds to load the photo urls for.
