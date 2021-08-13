@@ -2,10 +2,8 @@ import { app, BrowserWindow, ipcMain } from 'electron';
 import electronReload from 'electron-reload';
 import path from 'path';
 import { MessageType } from './constants';
-import {
-	BreedData, getBreeds, getBreedPhotos, DogsData,
-} from '../models/accessDogAPI';
-import { BreedDataRenderer } from '../components/BreedContainerElem';
+import { getBreeds, getBreedPhotos, DogsData } from '../models/accessDogAPI';
+import { BreedDetailWithPhotos } from '../components/BreedContainer';
 
 const hardRefresh = false;
 if (hardRefresh) {
@@ -103,14 +101,14 @@ async function loadNextUrls(num: number) {
 	}
 }
 
-ipcMain.handle(MessageType[MessageType.requestNextBreedData], async (): Promise<null | BreedDataRenderer> => {
+ipcMain.handle(MessageType[MessageType.requestNextBreedData], async (): Promise<null | BreedDetailWithPhotos> => {
 	currentBreedIndex += 1;
-	return dogsData().then(async (data): Promise<null | BreedDataRenderer> => {
+	return dogsData().then(async (data): Promise<null | BreedDetailWithPhotos> => {
 		const breed = data.breedsData[currentBreedIndex];
 		const { id } = breed;
 		if (id === undefined) return null;
-		return getBreedPhotoUrls(id).then((urls): BreedDataRenderer => {
-			const dataRenderer: BreedDataRenderer = {
+		return getBreedPhotoUrls(id).then((urls): BreedDetailWithPhotos => {
+			const dataRenderer: BreedDetailWithPhotos = {
 				breedData: breed,
 				photoUrls: urls,
 			};
