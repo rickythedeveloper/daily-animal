@@ -70,8 +70,8 @@ html
                 .breedThumbnail
                     display: flex
                     flex-direction: column
-                    width: 200px
-                    height: 250px
+                    width: 250px
+                    height: 220px
                     border-radius: 10px
                     border: 2px solid map.get($commonColors, highlight)
                     padding: 15px
@@ -84,7 +84,9 @@ html
                     .breedThumbnailImage
                         flex: 1 1 auto
                         width: 100%
-                        object-fit: cover
+                        object-fit: contain
+                        justify-content: center
+                        overflow: hidden
                 .breedGroupsPage
                     
         .clickable

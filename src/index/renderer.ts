@@ -37,5 +37,5 @@ function showStuff() {
 	});
 }
 
-// showStuff();
-showRandomBreedPage();
+showStuff();
+// showRandomBreedPage();
