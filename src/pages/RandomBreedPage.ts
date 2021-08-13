@@ -1,28 +1,26 @@
-import BreedContainerElem, { BreedDataRenderer } from '../components/BreedContainerElem';
+import BreedContainer, { BreedDetailWithPhotos } from '../components/BreedContainer';
 import GenericButton from '../components/GenericButton';
 import Component from '../models/Component';
 
-const RandomBreedPage = (getNextBreedData: () => Promise<BreedDataRenderer | null>): Component<'div'> => {
-	const page = new Component('div');
-	let breedContainer = new Component('div');
+class RandomBreedPage extends Component<'div'> {
+	private breedContainer: BreedContainer = new BreedContainer();
 
-	function showBreedData(data: BreedDataRenderer | null) {
+	constructor(public getNextBreedData: () => Promise<BreedDetailWithPhotos | null>) {
+		super('div');
+		const nextBreedButton = GenericButton('Get next breed', 'blue', this.onNextButtonPress.bind(this));
+		this.appendChildren(nextBreedButton, this.breedContainer);
+	}
+
+	showBreedData(data: BreedDetailWithPhotos) {
+		this.breedContainer.breedData = data.breedData;
+		this.breedContainer.photoUrls = data.photoUrls;
+	}
+
+	async onNextButtonPress() {
+		const data = await this.getNextBreedData();
 		if (data === null) return;
-		const newBreedContainer = BreedContainerElem(data);
-		page.replaceChild(newBreedContainer, breedContainer);
-		breedContainer = newBreedContainer;
+		this.showBreedData(data);
 	}
-
-	async function onNextBreedPress() {
-		const data = await getNextBreedData();
-		showBreedData(data);
-	}
-
-	const nextBreedButton = GenericButton('Get next breed', 'blue', onNextBreedPress);
-	page.appendChild(nextBreedButton);
-	page.appendChild(breedContainer);
-
-	return page;
-};
+}
 
 export default RandomBreedPage;

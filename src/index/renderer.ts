@@ -1,13 +1,12 @@
 // In renderer process (web page).
 import { ipcRenderer } from 'electron';
 import { MessageType } from './constants';
-import { BreedDataRenderer } from '../components/BreedContainerElem';
+import { BreedDetailWithPhotos } from '../components/BreedContainer';
 import SideBar from '../components/SideBar';
 import Content from '../components/Content';
 import RandomBreedPage from '../pages/RandomBreedPage';
 import { DogsData } from '../models/accessDogAPI';
 import BreedGroupsPage from '../pages/BreedGroupsPage';
-import Component from '../models/Component';
 import navigation from '../models/navigation';
 
 const container = document.getElementById('container') as HTMLDivElement;
@@ -20,8 +19,8 @@ container.appendChild(contentElem.element);
 
 navigation.contentComponent = contentElem;
 
-async function getNextBreedData(): Promise<BreedDataRenderer | null> {
-	return await ipcRenderer.invoke(MessageType[MessageType.requestNextBreedData]) as BreedDataRenderer | null;
+async function getNextBreedData(): Promise<BreedDetailWithPhotos | null> {
+	return await ipcRenderer.invoke(MessageType[MessageType.requestNextBreedData]) as BreedDetailWithPhotos | null;
 }
 
 async function getDogsData(): Promise<DogsData> {
@@ -29,7 +28,7 @@ async function getDogsData(): Promise<DogsData> {
 }
 
 function showRandomBreedPage() {
-	navigation.navigate(RandomBreedPage(getNextBreedData));
+	navigation.navigate(new RandomBreedPage(getNextBreedData));
 }
 
 function showStuff() {
@@ -38,4 +37,5 @@ function showStuff() {
 	});
 }
 
-showStuff();
+// showStuff();
+showRandomBreedPage();

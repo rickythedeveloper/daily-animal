@@ -3,7 +3,7 @@ import { BreedData } from '../models/accessDogAPI';
 import Component from '../models/Component';
 import { MessageType } from '../index/constants';
 import navigation from '../models/navigation';
-import BreedContainerElem from './BreedContainerElem';
+import BreedContainer from './BreedContainer';
 
 class BreedThumbnail extends Component<'div'> {
 	constructor(public data: BreedData) {
@@ -35,7 +35,7 @@ class BreedThumbnail extends Component<'div'> {
 
 	async onClick() {
 		const photoUrls = await this.getBreedPhotoUrls();
-		navigation.navigate(BreedContainerElem({ breedData: this.data, photoUrls }));
+		navigation.navigate(new BreedContainer(this.data, photoUrls));
 	}
 }
 
