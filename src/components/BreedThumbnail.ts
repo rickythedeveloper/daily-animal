@@ -36,7 +36,7 @@ class BreedThumbnail extends Component<'div'> {
 		if (imageUrl) this.photoUrls = [imageUrl];
 
 		this.getBreedPhotoUrls().then((urls) => {
-			this.photoUrls = [...this.photoUrls, ...urls];
+			this.photoUrls = urls;
 		});
 	}
 

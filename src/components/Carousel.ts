@@ -6,7 +6,8 @@ class Carousel extends Component<'div'> {
 	get photoUrls() { return this._photoUrls; }
 
 	set photoUrls(value: string[]) {
-		const photoComponents = value.map((url, index) => {
+		const urlsNoDuplicate = Array.from(new Set(value));
+		const photoComponents = urlsNoDuplicate.map((url, index) => {
 			const photoComponent = new Component('img');
 			photoComponent.element.classList.add('carouselPhoto');
 			photoComponent.element.src = url;
@@ -14,7 +15,8 @@ class Carousel extends Component<'div'> {
 			return photoComponent;
 		});
 		this.photosContainer.children = photoComponents;
-		this._photoUrls = value;
+		this._photoUrls = urlsNoDuplicate;
+		this.updateButtons();
 	}
 
 	_currentIndex: number = 0;
@@ -62,14 +64,12 @@ class Carousel extends Component<'div'> {
 	goToNext() {
 		if (this.currentIndex >= this.photoUrls.length - 1) return;
 		this.currentIndex += 1;
-
 		this.updateButtons();
 	}
 
 	goToPrevious() {
 		if (this.currentIndex <= 0) return;
 		this.currentIndex -= 1;
-
 		this.updateButtons();
 	}
 }
