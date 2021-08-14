@@ -61,13 +61,15 @@ class Carousel extends Component<'div'> {
 		this.backButton.element.hidden = backButtonShouldBeHidden;
 	}
 
-	goToNext() {
+	goToNext(event: MouseEvent) {
+		event.stopPropagation();
 		if (this.currentIndex >= this.photoUrls.length - 1) return;
 		this.currentIndex += 1;
 		this.updateButtons();
 	}
 
-	goToPrevious() {
+	goToPrevious(event: MouseEvent) {
+		event.stopPropagation();
 		if (this.currentIndex <= 0) return;
 		this.currentIndex -= 1;
 		this.updateButtons();

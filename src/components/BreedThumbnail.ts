@@ -47,7 +47,7 @@ class BreedThumbnail extends Component<'div'> {
 	}
 
 	async onClick() {
-		// navigation.navigate(new BreedContainer(this.data, this.photoUrls));
+		navigation.navigate(new BreedContainer(this.data, this.photoUrls));
 	}
 }
 
