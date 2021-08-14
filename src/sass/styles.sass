@@ -80,14 +80,6 @@ html
                     .breedThumbnailName
                         flex: 0 1 auto
                         text-align: center
-
-                    .breedThumbnailImage
-                        flex: 1 1 auto
-                        width: 100%
-                        object-fit: contain
-                        justify-content: center
-                        overflow: hidden
-                .breedGroupsPage
                     
         .clickable
             transition: background-color $transitionDuration
@@ -133,3 +125,42 @@ html
             flex-direction: row
             flex-wrap: wrap
             gap: 10px
+
+        .carousel
+            position: relative
+            overflow: hidden
+            flex: 1 1 auto
+            width: 100%
+
+            $carouselButtonSize: 50px
+            .carouselButton
+                position: absolute
+                background-color: red
+                border-radius: 1000
+                height: $carouselButtonSize
+                width: $carouselButtonSize
+                top: 50%
+                margin-top: -$carouselButtonSize / 2
+
+            $carouselButtonSizeMargin: 20px
+            .carouselButtonForward
+                right: $carouselButtonSizeMargin
+
+            .carouselButtonBack
+                left: $carouselButtonSizeMargin
+            
+            .carouselPhotoContainer
+                position: absolute
+                width: 100%
+                height: 100%
+                top: 0
+                left: 0
+                object-fit: contain
+                justify-content: center
+
+                .carouselPhoto
+                    position: absolute
+                    width: 100%
+                    height: 100%
+                    top: 0
+                

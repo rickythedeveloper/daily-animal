@@ -4,8 +4,20 @@ import Component from '../models/Component';
 import { MessageType } from '../index/constants';
 import navigation from '../models/navigation';
 import BreedContainer from './BreedContainer';
+import Carousel from './Carousel';
 
 class BreedThumbnail extends Component<'div'> {
+	carousel: Carousel = new Carousel();
+
+	_photoUrls: string[] = [];
+
+	get photoUrls() { return this._photoUrls; }
+
+	set photoUrls(value) {
+		this.carousel.photoUrls = value;
+		this._photoUrls = value;
+	}
+
 	constructor(public data: BreedData) {
 		super('div');
 		this.element.classList.add('breedThumbnail');
@@ -18,13 +30,14 @@ class BreedThumbnail extends Component<'div'> {
 		breedNameComponent.element.innerText = data.name || '';
 		this.appendChild(breedNameComponent);
 
+		this.appendChild(this.carousel);
+
 		const imageUrl = data.image?.url;
-		if (imageUrl) {
-			const imageComponent = new Component('img');
-			imageComponent.element.src = imageUrl;
-			imageComponent.element.classList.add('breedThumbnailImage');
-			this.appendChild(imageComponent);
-		}
+		if (imageUrl) this.photoUrls = [imageUrl];
+
+		this.getBreedPhotoUrls().then((urls) => {
+			this.photoUrls = [...this.photoUrls, ...urls];
+		});
 	}
 
 	async getBreedPhotoUrls(): Promise<string[]> {
@@ -34,8 +47,7 @@ class BreedThumbnail extends Component<'div'> {
 	}
 
 	async onClick() {
-		const photoUrls = await this.getBreedPhotoUrls();
-		navigation.navigate(new BreedContainer(this.data, photoUrls));
+		// navigation.navigate(new BreedContainer(this.data, this.photoUrls));
 	}
 }
 
