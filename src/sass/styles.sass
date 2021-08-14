@@ -7,79 +7,107 @@ $commonColors: (highlight: #7773, transparent: #0000)
 $transitionDuration: 0.3s
 
 $clickable-button-text-color: #aaaaaa
-html
+
+@mixin span-parent
     height: 100%
     width: 100%
+
+html
+    @include span-parent
+    
     body
+        @include span-parent
         font: 100% $font-stack
-        height: 100%
-        width: 100%
-
+        margin: 0
+            
         #container
-            display: grid
-            grid-template-columns: minmax(100px, 20%) 1fr
-            height: 100%
-            width: 100%
+            @include span-parent
+            display: flex
+            flex-direction: column
 
-            #sideBar
-                $sideBarBorderColor: rgba(128, 128, 128, 0.1)
-                height: 100%
-                border-right: 2px solid $sideBarBorderColor
+            #navigationBar
+                width: 100%
+                height: 50px
+                display: flex
+                flex-direction: row
+                background-color: #7772
+                flex-grow: 0
+                flex-shrink: 0
+                align-items: center
 
-                .sideBarText
-                    border-bottom: 2px solid $sideBarBorderColor
+                .navigationBarButton
+                    background-color: #7772
+                    border-radius: 5px
+                    padding: 5px
+                    height: 20px
+                    margin: 10px
 
-            #content
-                padding: 0 20px
+            #contentContainer
+                display: grid
+                grid-template-columns: minmax(100px, 20%) 1fr
+                flex-grow: 1
+                flex-shrink: 0
+                width: 100%
 
-                .breedContainer
-                    display: flex
-                    flex-direction: column
-                    align-items: center
+                #sideBar
+                    $sideBarBorderColor: rgba(128, 128, 128, 0.1)
+                    height: 100%
+                    border-right: 2px solid $sideBarBorderColor
 
-                    .metric
+                    .sideBarText
+                        border-bottom: 2px solid $sideBarBorderColor
+
+                #content
+                    padding: 0 20px
+
+                    .breedContainer
                         display: flex
-                        flex-direction: row
-                        align-items: flex-start
+                        flex-direction: column
+                        align-items: center
 
-                        .metricIcon
-                            width: 30px
-                            margin-right: 10px
-                            user-select: none
-
-                        .metricValue
-                            line-height: 30px
-                            font-size: 20px
-
-                    .imagesContainer
-                        display: grid
-                        grid-template-columns: repeat( auto-fit, minmax(250px, 1fr) )
-                        gap: 30px
-
-                        .imageContainer
+                        .metric
                             display: flex
-                            justify-content: center
-                            height: 300px
+                            flex-direction: row
+                            align-items: flex-start
 
-                            .breedImage
-                                object-fit: contain
-                                height: 100%
-                                width: 100%
-                                border-radius: 10px
+                            .metricIcon
+                                width: 30px
+                                margin-right: 10px
+                                user-select: none
 
-                .breedThumbnail
-                    display: flex
-                    flex-direction: column
-                    width: 250px
-                    height: 220px
-                    border-radius: 10px
-                    border: 2px solid map.get($commonColors, highlight)
-                    padding: 15px
-                    align-items: center
+                            .metricValue
+                                line-height: 30px
+                                font-size: 20px
 
-                    .breedThumbnailName
-                        flex: 0 1 auto
-                        text-align: center
+                        .imagesContainer
+                            display: grid
+                            grid-template-columns: repeat( auto-fit, minmax(250px, 1fr) )
+                            gap: 30px
+
+                            .imageContainer
+                                display: flex
+                                justify-content: center
+                                height: 300px
+
+                                .breedImage
+                                    object-fit: contain
+                                    height: 100%
+                                    width: 100%
+                                    border-radius: 10px
+
+                    .breedThumbnail
+                        display: flex
+                        flex-direction: column
+                        width: 250px
+                        height: 220px
+                        border-radius: 10px
+                        border: 2px solid map.get($commonColors, highlight)
+                        padding: 15px
+                        align-items: center
+
+                        .breedThumbnailName
+                            flex: 0 1 auto
+                            text-align: center
                     
         .clickable
             transition: background-color $transitionDuration

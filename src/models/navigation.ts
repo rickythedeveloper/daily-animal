@@ -55,6 +55,14 @@ class Navigation {
 		if (this.currentIndex >= this.history.length - 1) throw new Error('Cannot go forwards further');
 		this.currentIndex += 1;
 	}
+
+	get canGoBack(): boolean {
+		return this.currentIndex > 0;
+	}
+
+	get canGoForward(): boolean {
+		return this.currentIndex < this.history.length - 1;
+	}
 }
 
 const navigation = new Navigation();

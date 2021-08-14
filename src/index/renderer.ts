@@ -8,14 +8,22 @@ import RandomBreedPage from '../pages/RandomBreedPage';
 import { DogsData } from '../models/accessDogAPI';
 import BreedGroupsPage from '../pages/BreedGroupsPage';
 import navigation from '../models/navigation';
+import navigationBar from '../components/NavigationBar';
+import Component from '../models/Component';
 
 const container = document.getElementById('container') as HTMLDivElement;
+
+container.appendChild(navigationBar.element);
+
+const contentContainer = new Component('div');
+contentContainer.element.id = 'contentContainer';
+container.appendChild(contentContainer.element);
+
 const sideBar = SideBar([
 	{ title: 'Breed', onClick: () => {} },
 ]);
 const contentElem = Content();
-container.appendChild(sideBar);
-container.appendChild(contentElem.element);
+contentContainer.children = [sideBar, contentElem];
 
 navigation.contentComponent = contentElem;
 
