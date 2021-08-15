@@ -18,45 +18,45 @@ interface MetricData {
 	value: string | undefined;
 }
 
-function getSvgElement(filepath: string): Component<'img'> {
+const SvgComponent = (filepath: string): Component<'img'> => {
 	const component = new Component('img');
 	component.element.src = filepath;
 	return component;
-}
+};
 
-const MetricElement = (data: MetricData): Component<'div'> | null => {
+const MetricComponent = (data: MetricData): Component<'div'> | null => {
 	if (data.value === undefined) return null;
 	const component = new Component('div');
 	component.element.classList.add('metric');
 
-	const icon = getSvgElement(data.iconPath);
+	const icon = SvgComponent(data.iconPath);
 	icon.element.classList.add('metricIcon');
-	component.appendChild(icon);
 
 	const valueComponent = new Component('div');
 	valueComponent.element.innerText = data.value;
 	valueComponent.element.classList.add('metricValue');
-	component.appendChild(valueComponent);
+
+	component.children = [icon, valueComponent];
 	return component;
 };
 
-const Metrics = (data: MetricData[]): Component<'div'> => {
+const MetricsContainer = (data: MetricData[]): Component<'div'> => {
 	const component = new Component('div');
 	data.forEach((metric) => {
-		const child = MetricElement(metric);
+		const child = MetricComponent(metric);
 		if (child) component.appendChild(child);
 	});
 	return component;
 };
 
-const ImageContainer = (url: string): Component<'div'> => {
+const ImageComponent = (url: string): Component<'div'> => {
 	const imgComponent = new Component('img');
 	imgComponent.element.classList.add('breedImage');
 	imgComponent.element.src = url;
 
 	const imgContainerComponent = new Component('div');
 	imgContainerComponent.element.classList.add('imageContainer');
-	imgContainerComponent.appendChild(imgComponent);
+	imgContainerComponent.children = [imgComponent];
 
 	return imgContainerComponent;
 };
@@ -64,15 +64,12 @@ const ImageContainer = (url: string): Component<'div'> => {
 const ImagesContainer = (photoUrls: string[]): Component<'div'> => {
 	const component = new Component('div');
 	component.element.classList.add('imagesContainer');
-	photoUrls.forEach((url) => {
-		component.appendChild(ImageContainer(url));
-	});
+	component.children = photoUrls.map((url) => ImageComponent(url));
 	return component;
 };
 
 function rangeString(range: NumberRange | number): string {
 	if (typeof range === 'number') {
-		// if (range instanceof Number) {
 		return `${range}`;
 	}
 	return `${(range as NumberRange).min} - ${(range as NumberRange).max}`;
@@ -99,7 +96,7 @@ class BreedContainer extends Component<'div'> {
 			metricsComponent = metrics;
 		} else {
 			nameComponent = BreedNameElem(this.breedData.name || '');
-			metricsComponent = Metrics([
+			metricsComponent = MetricsContainer([
 				{ iconPath: '../assets/pets_black_24dp.svg', value: this.breedData.alt_names?.join(', ') },
 				{ iconPath: '../assets/pets_black_24dp.svg', value: this.breedData.breed_group },
 				{

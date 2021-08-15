@@ -9,13 +9,10 @@ import Carousel from './Carousel';
 class BreedThumbnail extends Component<'div'> {
 	carousel: Carousel = new Carousel();
 
-	_photoUrls: string[] = [];
-
-	get photoUrls() { return this._photoUrls; }
+	get photoUrls() { return this.carousel.photoUrls; }
 
 	set photoUrls(value) {
 		this.carousel.photoUrls = value;
-		this._photoUrls = value;
 	}
 
 	constructor(public data: BreedData) {
@@ -28,9 +25,8 @@ class BreedThumbnail extends Component<'div'> {
 		const breedNameComponent = new Component('div');
 		breedNameComponent.element.classList.add('breedThumbnailName');
 		breedNameComponent.element.innerText = data.name || '';
-		this.appendChild(breedNameComponent);
 
-		this.appendChild(this.carousel);
+		this.children = [breedNameComponent, this.carousel];
 
 		const imageUrl = data.image?.url;
 		if (imageUrl) this.photoUrls = [imageUrl];

@@ -1,5 +1,5 @@
-import Component from '../models/Component';
-import navigation from '../models/navigation';
+import Component from '../../models/Component';
+import navigation from '../../models/navigation';
 
 class NavigationBar extends Component<'div'> {
 	constructor() {
