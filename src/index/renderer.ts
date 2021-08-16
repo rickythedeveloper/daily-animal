@@ -3,6 +3,7 @@ import { MessageType } from './constants';
 import navigation from '../models/navigation';
 import container from '../components/unique/container';
 import navigationBar from '../components/unique/navigationBar';
+import navigationBarDummy from '../components/unique/navigationBarDummy';
 import contentContainer from '../components/unique/contentContainer';
 import SideBar from '../components/unique/SideBar';
 import content from '../components/unique/content';
@@ -14,7 +15,7 @@ const sideBar = new SideBar([
 	{ title: 'Breed', onClick: () => {} },
 ]);
 body.appendChild(container.element);
-container.children = [navigationBar, contentContainer];
+container.children = [navigationBarDummy, navigationBar, contentContainer];
 contentContainer.children = [sideBar, content];
 
 navigation.contentComponent = content;

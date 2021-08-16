@@ -6,6 +6,8 @@ $themeColors: ('blue': (heavy: #11b, medium: #36f, light: #6af, superLight: #9df
 $commonColors: (highlight: #7773, transparent: #0000)
 $transitionDuration: 0.3s
 
+$zIndices: (alwaysShow: 100)
+
 $clickable-button-text-color: #aaaaaa
 
 @mixin span-parent
@@ -17,48 +19,57 @@ html
     
     body
         @include span-parent
-        font: 100% $font-stack
         margin: 0
+        font: 100% $font-stack
             
         #container
             @include span-parent
             display: flex
             flex-direction: column
+            overflow: hidden
+
+            @mixin navigationBarSizing
+                width: 100%
+                flex: 0 0 50px
+            
+            #navigationBarDummy
+                @include navigationBarSizing
 
             #navigationBar
-                width: 100%
-                height: 50px
+                position: fixed
+                @include navigationBarSizing
+                z-index: map.get($zIndices, alwaysShow)
                 display: flex
                 flex-direction: row
                 background-color: #7772
-                flex-grow: 0
-                flex-shrink: 0
                 align-items: center
 
                 .navigationBarButton
-                    background-color: #7772
-                    border-radius: 5px
-                    padding: 5px
                     height: 20px
                     margin: 10px
+                    border-radius: 5px
+                    padding: 5px
+                    background-color: #7772
 
             #contentContainer
                 display: grid
-                grid-template-columns: minmax(100px, 20%) 1fr
-                flex-grow: 1
-                flex-shrink: 0
                 width: 100%
+                flex: 1 1 auto
+                grid-template-columns: minmax(100px, 20%) 1fr
+                overflow: auto
 
                 #sideBar
-                    $sideBarBorderColor: rgba(128, 128, 128, 0.1)
                     height: 100%
+                    $sideBarBorderColor: rgba(128, 128, 128, 0.1)
                     border-right: 2px solid $sideBarBorderColor
 
                     .sideBarText
                         border-bottom: 2px solid $sideBarBorderColor
 
                 #content
+                    height: 100%
                     padding: 0 20px
+                    overflow: auto
 
                     .breedContainer
                         display: flex
@@ -90,9 +101,9 @@ html
                                 height: 300px
 
                                 .breedImage
-                                    object-fit: contain
                                     height: 100%
                                     width: 100%
+                                    object-fit: contain
                                     border-radius: 10px
 
                     .breedThumbnail
@@ -117,10 +128,10 @@ html
                 background-color: map.get($commonColors, highlight)
 
         .genericButton
-            border-radius: 5px
-            padding: 10px 12px
             width: fit-content
             height: fit-content
+            border-radius: 5px
+            padding: 10px 12px
             transition: all $transitionDuration ease
             user-select: none
 
@@ -156,19 +167,19 @@ html
 
         .carousel
             position: relative
-            overflow: hidden
             flex: 1 1 auto
             width: 100%
+            overflow: hidden
 
             $carouselButtonSize: 50px
             .carouselButton
                 position: absolute
-                background-color: red
-                border-radius: 1000
                 height: $carouselButtonSize
                 width: $carouselButtonSize
                 top: 50%
                 margin-top: -$carouselButtonSize / 2
+                background-color: red
+                border-radius: 1000
 
             $carouselButtonSizeMargin: 20px
             .carouselButtonForward
