@@ -18,6 +18,8 @@ class Component<T extends keyof HTMLElementTagNameMap> {
 		});
 	}
 
+	onChangeCallbacks: { [listenerName: string]: () => void } = {};
+
 	constructor(tag: T) {
 		this._element = document.createElement(tag);
 		this._children = [];
@@ -34,24 +36,22 @@ class Component<T extends keyof HTMLElementTagNameMap> {
 		return component;
 	}
 
-	appendChild(component: Component<any>) {
-		this.appendChildren(component);
-	}
-
 	appendChildren(...components: Component<any>[]) {
 		const newChildren = [...this.children, ...components];
 		this.children = newChildren;
 	}
 
-	removeChild(child: Component<any>) {
-		const oldChildIndex = this.children.indexOf(child);
-		if (oldChildIndex === -1) return;
-		this.children.splice(oldChildIndex, 1);
+	removeChildewn(...children: Component<any>[]) {
+		children.forEach((child) => {
+			const oldChildIndex = this.children.indexOf(child);
+			if (oldChildIndex === -1) throw new Error('Cannot remove a child that does not exist');
+			this.children.splice(oldChildIndex, 1);
+		});
 	}
 
 	replaceChild(newChild: Component<any>, oldChild: Component<any>) {
 		const oldChildIndex = this.children.indexOf(oldChild);
-		if (oldChildIndex === -1) return;
+		if (oldChildIndex === -1) throw new Error('Cannot replace a child that does not exist');
 		this.children = [
 			...this.children.slice(0, oldChildIndex),
 			newChild,
@@ -59,8 +59,12 @@ class Component<T extends keyof HTMLElementTagNameMap> {
 		];
 	}
 
-	addClass(className: string) {
-		this.element.classList.add(className);
+	addOnChangeListener(listenerName: string, onChange: () => void) { this.onChangeCallbacks[listenerName] = onChange; }
+
+	removeOnChangeListener(listenerName: string) { delete this.onChangeCallbacks[listenerName]; }
+
+	onChange() {
+		Object.values(this.onChangeCallbacks).forEach((callback) => callback());
 	}
 }
 

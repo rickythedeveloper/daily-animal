@@ -1,8 +1,11 @@
 import BreedContainer, { BreedDetailWithPhotos } from '../components/BreedContainer';
 import GenericButton from '../components/GenericButton';
 import Component from '../models/Component';
+import Page from '../models/Page';
 
-class RandomBreedPage extends Component<'div'> {
+class RandomBreedPage extends Component<'div'> implements Page {
+	get title() { return this.breedContainer.title; }
+
 	private breedContainer: BreedContainer = new BreedContainer();
 
 	constructor(public getNextBreedData: () => Promise<BreedDetailWithPhotos | null>) {

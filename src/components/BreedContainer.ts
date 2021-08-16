@@ -1,5 +1,6 @@
 import { BreedData, NumberRange } from '../models/accessDogAPI';
 import Component from '../models/Component';
+import Page from '../models/Page';
 
 interface BreedDetailWithPhotos {
 	breedData: BreedData;
@@ -44,7 +45,7 @@ const MetricsContainer = (data: MetricData[]): Component<'div'> => {
 	const component = new Component('div');
 	data.forEach((metric) => {
 		const child = MetricComponent(metric);
-		if (child) component.appendChild(child);
+		if (child) component.appendChildren(child);
 	});
 	return component;
 };
@@ -75,7 +76,9 @@ function rangeString(range: NumberRange | number): string {
 	return `${(range as NumberRange).min} - ${(range as NumberRange).max}`;
 }
 
-class BreedContainer extends Component<'div'> {
+class BreedContainer extends Component<'div'> implements Page {
+	get title() { return this.breedData?.name || 'unknown dog'; }
+
 	private breedDataComponents: Component<any>[];
 
 	private photoUrlsComponents: Component<any>[];
