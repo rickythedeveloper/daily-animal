@@ -1,13 +1,23 @@
 import BreedThumbnail from '../components/BreedThumbnail';
 import Component from '../models/Component';
+import Page from '../models/Page';
 import SelectionGrid from '../components/SelectionGrid';
 
 import { BreedData } from '../models/accessDogAPI';
 
-class BreedGroupsPage extends Component<'div'> {
+class BreedGroupsPage extends Component<'div'> implements Page {
+	title: string = 'Breed Groups';
+
 	selectionGrid: SelectionGrid;
 
 	groupNames: string[];
+
+	get selectedGroupNames(): string[] {
+		const { indicators } = this.selectionGrid;
+		const selectedGroupNames: string[] = [];
+		indicators.forEach((isSelected, index) => { if (isSelected) selectedGroupNames.push(this.groupNames[index]); });
+		return selectedGroupNames;
+	}
 
 	thumbnailGridContainer: Component<'div'>;
 
@@ -16,23 +26,21 @@ class BreedGroupsPage extends Component<'div'> {
 		this.element.classList.add('breedGroupsPage');
 		this.groupNames = Object.keys(groupToIds);
 
-		this.selectionGrid = new SelectionGrid(this.groupNames, () => {
+		this.selectionGrid = new SelectionGrid(this.groupNames);
+		this.selectionGrid.addOnChangeListener('breedGroupsPage', () => {
 			this.onSelectionChange();
+			this.onChange();
 		});
-		this.appendChild(this.selectionGrid);
 
 		this.thumbnailGridContainer = new Component('div');
 		this.thumbnailGridContainer.element.classList.add('grid');
-		this.appendChildren(this.thumbnailGridContainer);
+
+		this.children = [this.selectionGrid, this.thumbnailGridContainer];
 	}
 
 	onSelectionChange() {
-		const { indicators } = this.selectionGrid;
-		const selectedGroupNames: string[] = [];
-		indicators.forEach((isSelected, index) => { if (isSelected) selectedGroupNames.push(this.groupNames[index]); });
-
 		const selectedBreedIds: string[] = [];
-		selectedGroupNames.forEach((name) => selectedBreedIds.push(...this.groupToIds[name]));
+		this.selectedGroupNames.forEach((name) => selectedBreedIds.push(...this.groupToIds[name]));
 		const breedIds = new Set(selectedBreedIds);
 		const sortedIds = Array.from(breedIds).sort();
 
