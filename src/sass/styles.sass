@@ -1,4 +1,5 @@
 @use "sass:map"
+@use "sass:math"
     
 $font-stack:    Helvetica, sans-serif
 
@@ -177,7 +178,7 @@ html
                 height: $carouselButtonSize
                 width: $carouselButtonSize
                 top: 50%
-                margin-top: -$carouselButtonSize / 2
+                margin-top: math.div(-$carouselButtonSize, 2)
                 background-color: red
                 border-radius: 1000
 
