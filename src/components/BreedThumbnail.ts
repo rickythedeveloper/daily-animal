@@ -4,7 +4,7 @@ import Component from '../models/Component';
 import { MessageType } from '../index/constants';
 import navigation from '../models/navigation';
 import BreedContainer from './BreedContainer';
-import Carousel from './Carousel';
+import Carousel from './generic/Carousel';
 
 class BreedThumbnail extends Component<'div'> {
 	carousel: Carousel = new Carousel();

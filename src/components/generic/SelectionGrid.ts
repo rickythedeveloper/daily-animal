@@ -1,5 +1,5 @@
 import OnOffButton from './OnOffButton';
-import Component from '../models/Component';
+import Component from '../../models/Component';
 
 class SelectionGrid extends Component<'div'> {
 	indicators: boolean[];
@@ -12,7 +12,7 @@ class SelectionGrid extends Component<'div'> {
 	constructor(public options: string[]) {
 		super('div');
 		this.element.classList.add('grid');
-		const buttons = options.map((option, index) => OnOffButton(option, (isOn) => {
+		const buttons = options.map((option, index) => new OnOffButton(option, (isOn) => {
 			this.onSelectionChange(index, isOn);
 			this.onChange();
 		}));

@@ -1,5 +1,5 @@
 import BreedContainer, { BreedDetailWithPhotos } from '../components/BreedContainer';
-import GenericButton from '../components/GenericButton';
+import GenericButton from '../components/generic/GenericButton';
 import Component from '../models/Component';
 import Page from '../models/Page';
 
@@ -10,7 +10,7 @@ class RandomBreedPage extends Component<'div'> implements Page {
 
 	constructor(public getNextBreedData: () => Promise<BreedDetailWithPhotos | null>) {
 		super('div');
-		const nextBreedButton = GenericButton('Get next breed', 'blue', this.onNextButtonPress.bind(this));
+		const nextBreedButton = new GenericButton('Get next breed', 'blue', this.onNextButtonPress.bind(this));
 		this.appendChildren(nextBreedButton, this.breedContainer);
 	}
 

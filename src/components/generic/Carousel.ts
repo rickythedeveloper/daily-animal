@@ -1,4 +1,4 @@
-import Component from '../models/Component';
+import Component from '../../models/Component';
 
 class Carousel extends Component<'div'> {
 	_photoUrls: string[] = [];

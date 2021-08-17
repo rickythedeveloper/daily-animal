@@ -1,7 +1,7 @@
 import BreedThumbnail from '../components/BreedThumbnail';
 import Component from '../models/Component';
 import Page from '../models/Page';
-import SelectionGrid from '../components/SelectionGrid';
+import SelectionGrid from '../components/generic/SelectionGrid';
 import FloatingComponent from '../components/generic/FloatingComponent';
 
 import { BreedData } from '../models/accessDogAPI';
