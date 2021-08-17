@@ -4,7 +4,6 @@
 $font-stack:    Helvetica, sans-serif
 
 $themeColors: ('blue': (heavy: #11b, medium: #36f, light: #6af, superLight: #9df), 'red': (heavy: #c11, medium: #e33, light: #f66), 'green': (heavy: #1a1, medium: #3c3, light: #afa))
-$commonColors: (highlight: #7773, transparent: #0000)
 $transitionDuration: 0.3s
 
 $zIndices: (alwaysShow: 100)
@@ -113,7 +112,7 @@ html
                         width: 250px
                         height: 220px
                         border-radius: 10px
-                        border: 2px solid map.get($commonColors, highlight)
+                        border: 2px solid #9993
                         padding: 15px
                         align-items: center
 
@@ -126,7 +125,7 @@ html
             border-radius: 5px
             padding: 5px
             &:hover
-                background-color: map.get($commonColors, highlight)
+                background-color: #9993
 
         .genericButton
             width: fit-content
@@ -145,11 +144,10 @@ html
                     background-color: map.get($themeColorFamily, heavy)
 
         .genericButton-default
-            background-color: map.get($commonColors, transparent)
             color: black
 
             &:hover
-                background-color: map.get($commonColors, highlight)
+                background-color: #bbba
 
 
         .buttonOn
@@ -165,6 +163,11 @@ html
             flex-direction: row
             flex-wrap: wrap
             gap: 10px
+
+        .selectionGrid
+            background-color: #fffc
+            border-radius: 10px
+            padding: 10px
 
         .carousel
             position: relative

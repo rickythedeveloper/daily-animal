@@ -11,7 +11,7 @@ class SelectionGrid extends Component<'div'> {
 
 	constructor(public options: string[]) {
 		super('div');
-		this.element.classList.add('grid');
+		this.element.classList.add('grid', 'selectionGrid');
 		const buttons = options.map((option, index) => new OnOffButton(option, (isOn) => {
 			this.onSelectionChange(index, isOn);
 			this.onChange();
