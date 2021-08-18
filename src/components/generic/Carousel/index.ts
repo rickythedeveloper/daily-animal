@@ -1,4 +1,4 @@
-import Component from '../../models/Component';
+import Component from '../../../models/Component';
 import CarouselArrow, { ArrowType } from './CarouselArrow';
 
 const CAROUSEL_ARROW_WIDTH = 30;
