@@ -1,6 +1,6 @@
 import Component from '../../models/Component';
 
-export enum GenericButtonStyleEnum {
+enum GenericButtonStyleEnum {
 	red,
 	green,
 	blue,

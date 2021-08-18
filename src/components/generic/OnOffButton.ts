@@ -1,21 +1,24 @@
-import GenericButton, { GenericButtonStyleEnum } from './GenericButton';
+import GenericButton from './GenericButton';
 
 class OnOffButton extends GenericButton {
-	constructor(text: string, public setState: (isOn: boolean) => void) {
+	_isOn: boolean;
+
+	get isOn() { return this._isOn; }
+
+	set isOn(value: boolean) {
+		this._isOn = value;
+		this.buttonStyle = value ? 'green' : 'default';
+		this.onChange();
+	}
+
+	constructor(text: string, initialState: boolean = false) {
 		super(text, 'default', () => {});
 
-		this.onclick = this.toggle.bind(this);
+		this.onclick = () => { this.isOn = !this.isOn; };
+		this._isOn = initialState;
 	}
 
-	toggle() {
-		if (GenericButtonStyleEnum[this.buttonStyle] === GenericButtonStyleEnum.default) {
-			this.buttonStyle = 'green';
-			this.setState(true);
-		} else {
-			this.buttonStyle = 'default';
-			this.setState(false);
-		}
-	}
+	setState(isOn: boolean) { this.isOn = isOn; }
 }
 
 export default OnOffButton;
