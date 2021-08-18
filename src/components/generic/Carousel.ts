@@ -1,4 +1,8 @@
 import Component from '../../models/Component';
+import CarouselArrow, { ArrowType } from './CarouselArrow';
+
+const CAROUSEL_ARROW_WIDTH = 30;
+const CAROUSEL_ARROW_HEIGHT = 30;
 
 class Carousel extends Component<'div'> {
 	_photoUrls: string[] = [];
@@ -28,16 +32,14 @@ class Carousel extends Component<'div'> {
 		this._currentIndex = value;
 	}
 
-	nextButton: Component<'div'> = (() => {
-		const component = new Component('div');
-		component.element.classList.add('carouselButton', 'carouselButtonForward');
+	nextButton: CarouselArrow = (() => {
+		const component = new CarouselArrow(ArrowType.right, CAROUSEL_ARROW_WIDTH, CAROUSEL_ARROW_HEIGHT);
 		component.element.onclick = this.goToNext.bind(this);
 		return component;
 	})();
 
 	backButton: Component<'div'> = (() => {
-		const component = new Component('div');
-		component.element.classList.add('carouselButton', 'carouselButtonBack');
+		const component = new CarouselArrow(ArrowType.left, CAROUSEL_ARROW_WIDTH, CAROUSEL_ARROW_HEIGHT);
 		component.element.onclick = this.goToPrevious.bind(this);
 		return component;
 	})();
