@@ -28,8 +28,8 @@ class Carousel extends Component<'div'> {
 	get currentIndex() { return this._currentIndex; }
 
 	set currentIndex(value: number) {
-		this.photosContainer.element.style.left = `-${this.currentIndex}00%`;
 		this._currentIndex = value;
+		this.photosContainer.element.style.left = `-${this.currentIndex}00%`;
 	}
 
 	nextButton: CarouselArrow = (() => {

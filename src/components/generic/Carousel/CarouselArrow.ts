@@ -51,7 +51,7 @@ class CarouselArrow extends Component<'div'> {
 			canvasContext.lineTo(padding, canvas.height - padding);
 			canvasContext.lineTo(canvas.width - padding, canvas.height / 2);
 		}
-		canvasContext.fillStyle = '#fff7';
+		canvasContext.fillStyle = '#fffc';
 		canvasContext.fill();
 
 		this.children = [canvasComponent];
