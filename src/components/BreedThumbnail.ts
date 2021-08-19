@@ -17,7 +17,7 @@ class BreedThumbnail extends Component<'div'> {
 
 	constructor(public data: BreedData) {
 		super('div');
-		this.element.classList.add('breedThumbnail');
+		this.element.classList.add('breedThumbnail', 'dogPawCursor');
 		this.element.onclick = this.onClick.bind(this);
 
 		if (data.name === undefined) return;
