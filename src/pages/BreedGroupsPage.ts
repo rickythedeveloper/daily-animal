@@ -42,6 +42,8 @@ class BreedGroupsPage extends Component<'div'> implements Page {
 		this.thumbnailGridContainer.element.classList.add('grid');
 
 		this.children = [this.selectionGridFLoat, this.thumbnailGridContainer];
+
+		setTimeout(this.centerSelectionGrid.bind(this), 10);
 	}
 
 	onSelectionChange() {
@@ -59,6 +61,12 @@ class BreedGroupsPage extends Component<'div'> implements Page {
 		});
 
 		this.thumbnailGridContainer.children = thumbnails;
+	}
+
+	centerSelectionGrid() {
+		const floatWidth = this.selectionGridFLoat.element.clientWidth;
+		const mainWidth = this.selectionGridFLoat.mainComponent.element.clientWidth;
+		this.selectionGridFLoat.mainComponent.element.style.marginLeft = `${(floatWidth - mainWidth) / 2}px`;
 	}
 }
 
