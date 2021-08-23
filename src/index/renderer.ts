@@ -5,18 +5,14 @@ import container from '../components/unique/container';
 import navigationBar from '../components/unique/navigationBar';
 import navigationBarDummy from '../components/unique/navigationBarDummy';
 import contentContainer from '../components/unique/contentContainer';
-import SideBar from '../components/unique/SideBar';
 import content from '../components/unique/content';
 import { DogsData } from '../models/accessDogAPI';
 import BreedGroupsPage from '../pages/BreedGroupsPage';
 
 const body = document.getElementById('body') as HTMLBodyElement;
-const sideBar = new SideBar([
-	{ title: 'Breed', onClick: () => {} },
-]);
 body.appendChild(container.element);
 container.children = [navigationBarDummy, navigationBar, contentContainer];
-contentContainer.children = [sideBar, content];
+contentContainer.children = [content];
 
 navigation.contentComponent = content;
 
